@@ -265,7 +265,7 @@ def main():
         title="Global cascade during test " + str(rank)
     )
     legend = plt.legend()
-    plt.savefig(savepath + "process" + str(rank) + ".png")
+    plt.savefig(savepath + "/process" + str(rank) + ".png")
 
     env.close()
     netlogo.kill_workspace()
