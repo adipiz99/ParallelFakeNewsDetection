@@ -12,15 +12,20 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import gymnasium as gym
 import time
-
+from mpi4py import MPI
+from netlogo.simulation_parameters import NetlogoSimulationParameters
 
 plt.rcParams["figure.figsize"] = (10, 5)
 f, axis = plt.subplots(2, sharex=True)
 
 netlogo = pyNetLogo.NetLogoLink(gui=False)
 modelfile = os.path.abspath('./netlogo/FakeNewsSimulation.nlogo')
+if not os.path.exists('parallelDeepQResults'):
+    os.mkdir('parallelDeepQResults')
+savepath = os.path.abspath('./parallelDeepQResults')
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
 env = FakeNewsSimulation(netlogoCommands)
+params = NetlogoSimulationParameters()
 
 def agent(state_shape, action_shape):
 
@@ -82,6 +87,42 @@ def train(env, replay_memory, model, target_model, done):
 
     
 def main():
+    # Initialize MPI
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size() # Number of processes
+    plotTitle = ""
+
+    if size == 8:
+        if rank == 0:
+            params.setWarningWeight(int(params.getWarningWeight()/2))
+            plotTitle = "DeepQLearning with half Warning weight"
+        if rank == 1:
+           params.setWarningWeight(int(params.getWarningWeight()*2))
+           plotTitle = "DeepQLearning with double Warning weight"
+        if rank == 2:
+            params.setReiterateWeight(int(params.getReiterateWeight()/2))
+            plotTitle = "DeepQLearning with half Reiterate weight"
+        if rank == 3:
+             params.setReiterateWeight(int(params.getReiterateWeight()*2))
+             plotTitle = "DeepQLearning with double Reiterate weight"
+        if rank == 4:
+            params.setStaticWeight(int(params.getStaticWeight()/2))
+            plotTitle = "DeepQLearning with half Static weight"
+        if rank == 5:
+            params.setStaticWeight(int(params.getStaticWeight()*2))
+            plotTitle = "DeepQLearning with double Static weight"
+        if rank == 6:
+            params.setGoWeight(int(params.getGoWeight()/2))
+            plotTitle = "DeepQLearning with half Go weight"
+        if rank == 7:
+            params.setGoWeight(int(params.getGoWeight()*2))
+            plotTitle = "DeepQLearning with double Go weight"
+    else:
+        if rank == 0:
+            print("Unexpected number of processors")
+        return
+    
     epsilon = 1 # Epsilon-greedy algorithm in initialized at 1 meaning every step is random at the start
     max_epsilon = 1 # You can't explore more than 100% of the time
     min_epsilon = 0.01 # At a minimum, we'll always explore 1% of the time
@@ -154,8 +195,8 @@ def main():
                 break
 
                 
-        reward_over_episodes.append(wrapped_env.return_queue[-1])
-        epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay * episode)
+        reward_over_episodes.append(wrapped_env.return_queue[-1]) #Creare un sistema per fare append dopo il gathering dei risultati
+        epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay * episode) #Da calcolare prima del for
 
     total_rewards.append(reward_over_episodes)
 
@@ -167,7 +208,7 @@ def main():
     df1.rename(columns={"variable": "episodes", "value": "reward"}, inplace=True)
     sns.set(style="darkgrid", context="talk", palette="rainbow")
     sns.lineplot(x="episodes", y="reward", data=df1, ax= axis[0], label="training rewards").set(
-        title="DeepQLearning Train for FakeNewsDetection"
+        title=plotTitle
     )
     #plt.show()
 
@@ -198,7 +239,7 @@ def main():
             total_test_rewards += reward
 
             if terminated:
-                print('Total test rewards: {} after n steps = {} with final reward = {}'.format(total_test_rewards, episode, reward))
+                print("[" + str(rank) + ']Total test rewards: {} after n steps = {} with final reward = {}'.format(total_test_rewards, episode, reward))
                 global_cascade.append(observation[0])
 
                 
@@ -207,9 +248,9 @@ def main():
     total_rewards.append(reward_over_episodes)
 
     total_testing_time = (time.time() - start_time)/60
-    print("Training time %s minutes ---" % total_training_time)
-    print("Testing time %s minutes ---" % total_testing_time)
-    print("Totaltime {} minutes ---".format(total_training_time+total_testing_time))
+    print("[" + str(rank) + "] Training time %s minutes ---" % total_training_time)
+    print("[" + str(rank) + "] Testing time %s minutes ---" % total_testing_time)
+    print("[" + str(rank) + "] Totaltime {} minutes ---".format(total_training_time+total_testing_time))
 
 
     rewards_to_plot = [[reward[0] for reward in rewards] for rewards in total_rewards]
@@ -217,14 +258,14 @@ def main():
     df1.rename(columns={"variable": "episodes", "value": "reward"}, inplace=True)
     sns.set(style="darkgrid", context="talk", palette="rainbow")
     sns.lineplot(x="episodes", y="reward", data=df1, ax=axis[0], label="test rewards").set(
-        title="DeepQLearning Test for FakeNewsDetection"
+        title= plotTitle
     )
     df2 = pd.DataFrame({"episodes": [i for i in range(total_test_episodes)], "global cascade": global_cascade})
     sns.lineplot(ax = axis[1], x = "episodes", y = "global cascade", data = df2, label="global cascade").set(
-        title="Global cascade during test"
+        title="Global cascade during test " + str(rank)
     )
     legend = plt.legend()
-    plt.show()
+    plt.savefig(savepath + "process" + str(rank) + ".png")
 
     env.close()
     netlogo.kill_workspace()
