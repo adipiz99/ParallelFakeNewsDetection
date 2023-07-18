@@ -186,17 +186,17 @@ def main():
             total_training_rewards += reward
 
             if terminated:
-                print('Total training rewards: {} after n steps = {} with final reward = {}'.format(total_training_rewards, episode, reward))
+                print("[" + str(rank) + ']Total training rewards: {} after n steps = {} with final reward = {}'.format(total_training_rewards, episode, reward))
 
                 if steps_to_update_target_model >= 100:
-                    print('Copying main network weights to the target network weights')
+                    print("[" + str(rank) + ']Copying main network weights to the target network weights')
                     target_model.set_weights(model.get_weights())
                     steps_to_update_target_model = 0
                 break
 
                 
-        reward_over_episodes.append(wrapped_env.return_queue[-1]) #Creare un sistema per fare append dopo il gathering dei risultati
-        epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay * episode) #Da calcolare prima del for
+        reward_over_episodes.append(wrapped_env.return_queue[-1])
+        epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay * episode)
 
     total_rewards.append(reward_over_episodes)
 

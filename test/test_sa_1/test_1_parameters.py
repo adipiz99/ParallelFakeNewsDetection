@@ -17,6 +17,12 @@ class test_sa_1:
     warning_impact_neutral = 0.30
     sa_delay = 5
 
+    def set_dynamic_network_polarization(self, n_proc):
+        self.network_polarization = np.linspace(0, 1, num=n_proc)
+    
+    def __init__(self):
+        pass
+
 
 class NetlogoCommands:
 
