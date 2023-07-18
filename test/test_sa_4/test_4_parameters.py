@@ -8,7 +8,7 @@ class test_sa_4:
     echo_chamber_fraction = 0.20
     opinion_metric_step = 0.10
     nb_nodes = 100
-    path = "test/test_sa_4/test_sa_4_3_results/"
+    path = "test/test_sa_4/test_sa_4_results/"
     warning = "global"
     node_range_static_b = 0.05
     node_span = 10
@@ -17,6 +17,12 @@ class test_sa_4:
     warning_impact = 0.10
     warning_impact_neutral = 0.30
     sa_delay = 2
+
+    def set_dynamic_network_polarization(self, n_proc):
+        self.network_polarization = np.linspace(0, 1, num=n_proc)
+    
+    def __init__(self):
+        pass
 
 
 class NetlogoCommands:

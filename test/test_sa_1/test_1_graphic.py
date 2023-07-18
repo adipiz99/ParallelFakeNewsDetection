@@ -14,8 +14,8 @@ path = "test/test_sa_1/test_sa_1_results/"
 pathlist = Path(path).glob('**/*.csv')
 df_array = []
 
-for path in pathlist:
-    df_array.append(pd.read_csv(str(path)))
+for p in pathlist:
+    df_array.append(pd.read_csv(str(p)))
 
 df = pd.concat(df_array, ignore_index=True)
 
@@ -49,7 +49,7 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title="\u03B8 (threshold)")
 plt.grid(visible=True,linewidth=0.2)
 
-filepath = Path(path + 'test_sa_1_1_5step.png')  
+filepath = Path(str(path) + "test_sa_1_5step.png")
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

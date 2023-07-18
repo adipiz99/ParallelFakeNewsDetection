@@ -8,22 +8,16 @@ tresholds = [0.270, 0.342, 0.414]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_2/test_sa_2_2_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-df4 = pd.read_csv(path + 'test_4.csv')
-df5 = pd.read_csv(path + 'test_5.csv')
-df6 = pd.read_csv(path + 'test_6.csv')
-df7 = pd.read_csv(path + 'test_7.csv')
-df8 = pd.read_csv(path + 'test_8.csv')
-df9 = pd.read_csv(path + 'test_9.csv')
-df10 = pd.read_csv(path + 'test_10.csv')
-df11 = pd.read_csv(path + 'test_11.csv')
-df12 = pd.read_csv(path + 'test_12.csv')
-df13 = pd.read_csv(path + 'test_13.csv')
-df = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
+path = "test/test_sa_2/test_sa_2_results/"
 
+#get number of files in path
+pathlist = Path(path).glob('**/*.csv')
+df_array = []
+
+for p in pathlist:
+    df_array.append(pd.read_csv(str(p)))
+
+df = pd.concat(df_array, ignore_index=True)
 
 x_values = []
 y_values = []
@@ -55,7 +49,7 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title="\u03B8 (threshold)")
 plt.grid(visible=True,linewidth=0.2)
 
-filepath = Path(path + 'test_sa_2_1_PO27.png')  
+filepath = Path(path + 'test_sa_2_PO27.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

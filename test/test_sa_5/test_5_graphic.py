@@ -8,12 +8,15 @@ tresholds = [0.270, 0.342, 0.414]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_5/test_sa_5_2_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
+path = "test/test_sa_5/test_sa_5_results/"
+#get number of files in path
+pathlist = Path(path).glob('**/*.csv')
+df_array = []
 
-df = pd.concat([df1, df2, df3], ignore_index=True)
+for p in pathlist:
+    df_array.append(pd.read_csv(str(p)))
+
+df = pd.concat(df_array, ignore_index=True)
 
 x_values = []
 y_values = []
@@ -45,7 +48,7 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title="\u03B8 (threshold)")
 plt.grid(visible=True,linewidth=0.2)
 
-filepath = Path(path + 'test_sa_5_3_WI10_WIN50.png')  
+filepath = Path(path + 'test_sa_5_WI10_WIN50.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 
