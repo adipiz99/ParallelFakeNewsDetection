@@ -1,6 +1,6 @@
 import os
 
-proc_num = '8'
+proc_num = '6'
 path = os.path.abspath('test/test_sa_5/parallel_test_5.py')
 
 #windows
