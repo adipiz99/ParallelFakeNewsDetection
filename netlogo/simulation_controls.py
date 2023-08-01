@@ -74,4 +74,27 @@ class NetlogoCommands:
                 self.activate_static_b_node()
                 self.go()
 
+    def kill_workspace(self):
+        pass
+
+    def get_basic_agents(self):
+        return self.netlogo.report('get-basic-agents')
+    
+    def get_rewire(self):
+        return self.netlogo.report('get-rewire')
+    
+    def toggle_rewire(self):
+        return self.netlogo.report('toggle-rewire')
+    
+    def get_rewire_probability(self):
+        return self.netlogo.report('rewire-prob')
+    
+    def set_rewire_probability(self, value):
+        self.netlogo.command('set rewire-prob {}'.format(value))
+
+    def export_network(self, filename):
+        self.netlogo.command('export-data {}'.format('"' + filename + '"'))
+
+    def import_network(self, filename):
+        self.netlogo.command('import-data {}'.format('"' + filename + '"'))
     

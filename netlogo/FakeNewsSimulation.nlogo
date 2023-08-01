@@ -60,6 +60,14 @@ to setup-patches
   ask patches [ set pcolor black ]
 end
 
+to export-data [filename]
+  export-world filename
+end
+
+to import-data [filename]
+  import-world filename
+end
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Report
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -83,7 +91,6 @@ to-report limit-magnitude [number limit]
   if number < (- limit) [ report (- limit) ]
   report number
 end
-
 
 ;; Function used to get the count of total agents that are within the cluster(echo chamber)
 to-report get-in-cluster-agents
@@ -165,6 +172,24 @@ to-report get-most-influent-a-nodes-by-betweenness [node-span]
     ]
   ]
   report x / 10
+end
+
+;; Function used to get all the agents
+to-report get-basic-agents
+  report turtles with [breed = "basic-agents"]
+end
+
+;; Function used to get the is-rewire-active variable value
+to-report get-rewire
+  report is-rewire-active
+end
+
+;; Function used to set the is-rewire-active variable value
+to-report toggle-rewire
+  ifelse is-rewire-active = true 
+  [ set is-rewire-active false ]
+  [ set is-rewire-active true ]
+  report is-rewire-active
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -914,10 +939,12 @@ to go
     warn-agents
   ]
 
-  ;; If the the reiterate is active the super agent will set "reiterate" to true to the nodes connected to it
+  ;; If the reiterate is active the super agent will set "reiterate" to true to the nodes connected to it
   if is-reiterate-active = true [
     reiterate-agents
   ]
+
+  ;; If 
 
   ;; If an agent has changed his opinion toward the fake news in the previous tick, it is set to active with opinion a
   ask basic-agents with [is-active-next = true][
@@ -1551,6 +1578,17 @@ node-range-static-b
 NIL
 HORIZONTAL
 
+SWITCH
+489
+75
+630
+108
+is-rewire-active
+is-rewire-active
+1
+1
+-1000
+
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -1893,7 +1931,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.0
+NetLogo 6.2.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

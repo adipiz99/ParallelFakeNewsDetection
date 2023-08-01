@@ -86,5 +86,13 @@ class FakeNewsSimulation(Env):
 
         return self.get_obs(), reward, terminated, False, self.get_info()
     
+    def rewire(self):
+        is_rewiring_enabled = NetlogoSimulationParameters.rewiring
+        rewire_prob = NetlogoSimulationParameters.rewire_prob
+        
+        if (is_rewiring_enabled):
+           agent_num = self.netlogo.get_total_agents()
+           agent_list = self.netlogo.get_basic_agents()
+    
     def close(self):
         self.netlogo.kill_workspace()

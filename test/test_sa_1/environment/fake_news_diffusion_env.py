@@ -7,6 +7,7 @@ from netlogo.simulation_parameters import NetlogoSimulationParameters
 class FakeNewsSimulation(Env):
     netlogo = 0
     environment_utils = 0
+
     def __init__(self, netlogoCommands : NetlogoCommands):
         super(FakeNewsSimulation, self).__init__()
 
