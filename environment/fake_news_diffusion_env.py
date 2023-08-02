@@ -9,6 +9,8 @@ from netlogo.simulation_parameters import NetlogoSimulationParameters
 class FakeNewsSimulation(Env):
     netlogo = 0
     environment_utils = 0
+    params = NetlogoSimulationParameters()
+
     def __init__(self, netlogoCommands : NetlogoCommands):
         super(FakeNewsSimulation, self).__init__()
 
@@ -163,7 +165,7 @@ class FakeNewsSimulation(Env):
 
             if(rewiring and index >= begin_index):
                 #calculate rewiring probability
-                if(random.random() > rewire_prob):
+                if(random.random() <= rewire_prob):
                     #generate a random between 0 and max_agent_id
                     random_agent_id = random.randint(0, max_agent_id)
                     current_agent_id = int(row[0].split(' ')[1].split('}')[0])
@@ -180,7 +182,38 @@ class FakeNewsSimulation(Env):
         df1 = df.tail(-1)
         df1.to_csv("./netlogo/world.csv", index=False, header=False)
 
+        self.netlogo.import_network("world.csv")
         return True
 
-        self.netlogo.import_network("world.csv")
+    def grow(self):
+        is_network_growing = self.netlogo.get_growth()
 
+        if(is_network_growing):
+            tick = self.netlogo.get_current_tick()
+            growth_ticks = self.params.getGrowthTicks()
+            growth_percentages = self.params.getGrowthPercentages()
+            index = 0
+
+            for tick_step in growth_ticks:
+                if(tick > tick_step):
+                    index += 1
+                elif(tick <= tick_step):
+                    break
+
+            if index >= len(growth_percentages): # if the index is out of bounds, set it to the last index
+                index = len(growth_percentages) - 1
+
+            growth_percentage = growth_percentages[index]
+            basic_agents = self.netlogo.get_total_agents()
+            agents_to_add = int((basic_agents/100)*growth_percentage)
+
+            self.netlogo.add_agents(agents_to_add)
+            return True
+        return False
+
+
+
+
+                
+        
+                

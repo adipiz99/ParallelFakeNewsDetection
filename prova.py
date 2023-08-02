@@ -15,18 +15,25 @@ import time
 from mpi4py import MPI
 from netlogo.simulation_parameters import NetlogoSimulationParameters
 
-netlogo = pyNetLogo.NetLogoLink(gui=False)
+netlogo = pyNetLogo.NetLogoLink(gui=True)
 modelfile = os.path.abspath('./netlogo/FakeNewsSimulation.nlogo')
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
 env = FakeNewsSimulation(netlogoCommands)
 env.netlogo.setup()
 
 rewired = env.rewire()
+growth = env.grow()
 print("Rewired: " + str(rewired))
+print("Growth: " + str(growth))
 
 env.netlogo.toggle_rewire()
+env.netlogo.toggle_growth()
 
+growth = env.grow()
+growth = env.grow()
+growth = env.grow()
 rewired = env.rewire()
 print("Rewired: " + str(rewired))
+print("Growth: " + str(growth))
 
 env.netlogo.kill_workspace()

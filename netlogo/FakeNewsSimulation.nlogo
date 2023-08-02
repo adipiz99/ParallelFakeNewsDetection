@@ -174,22 +174,30 @@ to-report get-most-influent-a-nodes-by-betweenness [node-span]
   report x / 10
 end
 
-;; Function used to get all the agents
-to-report get-basic-agents
-  report turtles with [breed = "basic-agents"]
-end
-
 ;; Function used to get the is-rewire-active variable value
 to-report get-rewire
   report is-rewire-active
 end
 
+;; Function used to get the is-growing-active variable value
+to-report get-growing
+  report is-growing-active
+end
+
 ;; Function used to set the is-rewire-active variable value
 to-report toggle-rewire
-  ifelse is-rewire-active = true 
+  ifelse is-rewire-active = true
   [ set is-rewire-active false ]
   [ set is-rewire-active true ]
   report is-rewire-active
+end
+
+;; Function used to set the is-growing-active variable value
+to-report toggle-growing
+  ifelse is-growing-active = true
+  [ set is-growing-active false ]
+  [ set is-growing-active true ]
+  report is-growing-active
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -264,9 +272,10 @@ end
 to ER-RN [N]
   create-basic-agents N [
     setxy random-xcor random-ycor
+    set color yellow
   ]
 
-  ask basic-agents [
+  ask basic-agents with [color = yellow] [
     let x random-normal k-value std-dev
     if x < 0 [
       set x 0
@@ -280,7 +289,7 @@ to ER-RN [N]
       ]
     ]
   ]
-  ask basic-agents [
+  ask basic-agents with [color = yellow] [
     set-characteristics
   ]
 
@@ -518,6 +527,20 @@ to setup-turtles
 
   global-initialization
 
+end
+
+
+to add-agents [N]
+ ;; Choosing the type of network
+  if network = "Erdos Reny" [
+     ER-RN N
+  ]
+  if network = "Preferencial Attachment" [
+    P-A
+  ]
+  if network = "Small World" [
+    S-W
+  ]
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -944,7 +967,7 @@ to go
     reiterate-agents
   ]
 
-  ;; If 
+  ;; If
 
   ;; If an agent has changed his opinion toward the fake news in the previous tick, it is set to active with opinion a
   ask basic-agents with [is-active-next = true][
@@ -1585,6 +1608,17 @@ SWITCH
 108
 is-rewire-active
 is-rewire-active
+1
+1
+-1000
+
+SWITCH
+686
+74
+836
+107
+is-growing-active
+is-growing-active
 1
 1
 -1000

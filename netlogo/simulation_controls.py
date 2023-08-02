@@ -76,15 +76,18 @@ class NetlogoCommands:
 
     def kill_workspace(self):
         pass
-
-    def get_basic_agents(self):
-        return self.netlogo.report('get-basic-agents')
     
     def get_rewire(self):
         return self.netlogo.report('get-rewire')
     
     def toggle_rewire(self):
         return self.netlogo.report('toggle-rewire')
+    
+    def get_growth(self):
+        return self.netlogo.report('get-growing')
+    
+    def toggle_growth(self):
+        return self.netlogo.report('toggle-growing')
     
     def get_rewire_probability(self):
         return self.netlogo.report('rewire-prob')
@@ -97,4 +100,7 @@ class NetlogoCommands:
 
     def import_network(self, filename):
         self.netlogo.command('import-data {}'.format('"' + filename + '"'))
+
+    def add_agents(self, number):
+        self.netlogo.command('add-agents {}'.format(number))
     
