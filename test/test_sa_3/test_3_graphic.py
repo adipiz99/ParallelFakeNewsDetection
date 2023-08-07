@@ -11,6 +11,7 @@ markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--"
 path = "test/test_sa_3/test_sa_3_results/"
 #get number of files in path
 pathlist = Path(path).glob('**/*.csv')
+pathlist = sorted(pathlist)
 df_array = []
 
 for p in pathlist:
