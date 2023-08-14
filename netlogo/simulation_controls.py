@@ -89,6 +89,12 @@ class NetlogoCommands:
     def toggle_growth(self):
         return self.netlogo.report('toggle-growing')
     
+    def get_leaving(self):
+        return self.netlogo.report('get-leaving')
+
+    def toggle_leaving(self):
+        return self.netlogo.report('toggle-leaving')
+    
     def get_rewire_probability(self):
         return self.netlogo.report('rewire-prob')
     
@@ -103,4 +109,7 @@ class NetlogoCommands:
 
     def add_agents(self, number):
         self.netlogo.command('add-agents {}'.format(number))
+
+    def remove_agents(self, number):
+        self.netlogo.command('remove-agents {}'.format(number))
     

@@ -184,6 +184,11 @@ to-report get-growing
   report is-growing-active
 end
 
+;; Function used to get the is-leaving-active variable value
+to-report get-leaving
+  report is-leaving-active
+end
+
 ;; Function used to set the is-rewire-active variable value
 to-report toggle-rewire
   ifelse is-rewire-active = true
@@ -198,6 +203,14 @@ to-report toggle-growing
   [ set is-growing-active false ]
   [ set is-growing-active true ]
   report is-growing-active
+end
+
+;; Function used to set the is-leaving-active variable value
+to-report toggle-leaving
+  ifelse is-leaving-active = true
+  [ set is-leaving-active false ]
+  [ set is-leaving-active true ]
+  report is-leaving-active
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -542,6 +555,15 @@ to add-agents [N]
     S-W
   ]
 end
+
+to remove-agents [num-to-remove]
+  let eligible-turtles turtles with [color != violet]
+  let num-eligible count eligible-turtles
+  let agents-to-remove min (list num-to-remove num-eligible)
+  ask n-of agents-to-remove eligible-turtles [ die ]
+end
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clusterers
@@ -1623,6 +1645,17 @@ is-growing-active
 1
 -1000
 
+SWITCH
+696
+137
+842
+170
+is-leaving-active
+is-leaving-active
+1
+1
+-1000
+
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -1650,7 +1683,7 @@ is-growing-active
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab, or where workarounds were needed for missing features)
 
 ## RELATED MODELS
 
