@@ -215,24 +215,24 @@ class FakeNewsSimulation(Env):
         is_nodes_leaving = self.netlogo.get_leaving()
 
         if(is_nodes_leaving):
-            # tick = self.netlogo.get_current_tick()
-            # growth_ticks = self.params.getGrowthTicks()
-            # growth_percentages = self.params.getGrowthPercentages()
-            # index = 0
+            tick = self.netlogo.get_current_tick()
+            leave_ticks = self.params.getLeaveTicks()
+            leave_percentages = self.params.getLeavePercentages()
+            index = 0
 
-            # for tick_step in growth_ticks:
-            #     if(tick > tick_step):
-            #         index += 1
-            #     elif(tick <= tick_step):
-            #         break
+            for tick_step in leave_ticks:
+                if(tick > tick_step):
+                    index += 1
+                elif(tick <= tick_step):
+                    break
 
-            # if index >= len(growth_percentages): # if the index is out of bounds, set it to the last index
-            #     index = len(growth_percentages) - 1
+            if index >= len(leave_percentages): # if the index is out of bounds, set it to the last index
+                index = len(leave_percentages) - 1
 
-            # growth_percentage = growth_percentages[index]
-            # basic_agents = self.netlogo.get_total_agents()
-            # agents_to_add = int((basic_agents/100)*growth_percentage)
+            leave_percentage = leave_percentages[index]
+            basic_agents = self.netlogo.get_total_agents()
+            agents_to_remove = int((basic_agents/100)*leave_percentage)
 
-            self.netlogo.remove_agents(int(60))
+            self.netlogo.remove_agents(agents_to_remove)
             return True
         return False
