@@ -39,15 +39,15 @@ netlogoCommands.set_warning_impact(test_sa_1.warning_impact)
 netlogoCommands.set_warning_impact_neutral(test_sa_1.warning_impact_neutral)
 
 # Setup dynamic network params
-rewiring = env.rewire()
+rewiring = env.netlogo.get_rewire()
 if (not rewiring):
     env.netlogo.toggle_rewire()
 
-growing = env.grow()
+growing = env.netlogo.get_growth()
 if (not growing):
     env.netlogo.toggle_growth()
 
-leaving = env.leave()
+leaving = env.netlogo.get_leaving()
 if (not leaving):
     env.netlogo.toggle_leaving()
 
