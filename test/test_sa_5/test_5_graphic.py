@@ -8,9 +8,10 @@ tresholds = [0.270, 0.342, 0.414]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_5/test_sa_5_results/"
+path = "test/test_sa_5/test_sa_5_results_20_30/"
 #get number of files in path
 pathlist = Path(path).glob('**/*.csv')
+pathlist = sorted(pathlist)
 df_array = []
 
 for p in pathlist:
@@ -48,7 +49,7 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title="\u03B8 (threshold)")
 plt.grid(visible=True,linewidth=0.2)
 
-filepath = Path(path + 'test_sa_5_WI10_WIN50.png')  
+filepath = Path(path + 'test_sa_5_WI20_WIN30.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 
