@@ -60,6 +60,14 @@ to setup-patches
   ask patches [ set pcolor black ]
 end
 
+to export-data [filename]
+  export-world filename
+end
+
+to import-data [filename]
+  import-world filename
+end
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Report
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -83,7 +91,6 @@ to-report limit-magnitude [number limit]
   if number < (- limit) [ report (- limit) ]
   report number
 end
-
 
 ;; Function used to get the count of total agents that are within the cluster(echo chamber)
 to-report get-in-cluster-agents
@@ -167,6 +174,45 @@ to-report get-most-influent-a-nodes-by-betweenness [node-span]
   report x / 10
 end
 
+;; Function used to get the is-rewire-active variable value
+to-report get-rewire
+  report is-rewire-active
+end
+
+;; Function used to get the is-growing-active variable value
+to-report get-growing
+  report is-growing-active
+end
+
+;; Function used to get the is-leaving-active variable value
+to-report get-leaving
+  report is-leaving-active
+end
+
+;; Function used to set the is-rewire-active variable value
+to-report toggle-rewire
+  ifelse is-rewire-active = true
+  [ set is-rewire-active false ]
+  [ set is-rewire-active true ]
+  report is-rewire-active
+end
+
+;; Function used to set the is-growing-active variable value
+to-report toggle-growing
+  ifelse is-growing-active = true
+  [ set is-growing-active false ]
+  [ set is-growing-active true ]
+  report is-growing-active
+end
+
+;; Function used to set the is-leaving-active variable value
+to-report toggle-leaving
+  ifelse is-leaving-active = true
+  [ set is-leaving-active false ]
+  [ set is-leaving-active true ]
+  report is-leaving-active
+end
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Layouts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -239,9 +285,10 @@ end
 to ER-RN [N]
   create-basic-agents N [
     setxy random-xcor random-ycor
+    set color yellow
   ]
 
-  ask basic-agents [
+  ask basic-agents with [color = yellow] [
     let x random-normal k-value std-dev
     if x < 0 [
       set x 0
@@ -255,7 +302,7 @@ to ER-RN [N]
       ]
     ]
   ]
-  ask basic-agents [
+  ask basic-agents with [color = yellow] [
     set-characteristics
   ]
 
@@ -494,6 +541,29 @@ to setup-turtles
   global-initialization
 
 end
+
+
+to add-agents [N]
+ ;; Choosing the type of network
+  if network = "Erdos Reny" [
+     ER-RN N
+  ]
+  if network = "Preferencial Attachment" [
+    P-A
+  ]
+  if network = "Small World" [
+    S-W
+  ]
+end
+
+to remove-agents [num-to-remove]
+  let eligible-turtles turtles with [color != violet]
+  let num-eligible count eligible-turtles
+  let agents-to-remove min (list num-to-remove num-eligible)
+  ask n-of agents-to-remove eligible-turtles [ die ]
+end
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clusterers
@@ -914,10 +984,12 @@ to go
     warn-agents
   ]
 
-  ;; If the the reiterate is active the super agent will set "reiterate" to true to the nodes connected to it
+  ;; If the reiterate is active the super agent will set "reiterate" to true to the nodes connected to it
   if is-reiterate-active = true [
     reiterate-agents
   ]
+
+  ;; If
 
   ;; If an agent has changed his opinion toward the fake news in the previous tick, it is set to active with opinion a
   ask basic-agents with [is-active-next = true][
@@ -1129,7 +1201,7 @@ P_N
 P_N
 0
 1
-0.2
+0.4
 0.01
 1
 NIL
@@ -1245,7 +1317,7 @@ SLIDER
 std-dev
 std-dev
 0
-50
+20
 2.0
 1
 1
@@ -1502,7 +1574,7 @@ opinion-metric-step
 opinion-metric-step
 0
 1
-1.0
+0.1
 0.01
 1
 NIL
@@ -1536,23 +1608,6 @@ get-in-cluster-agents
 1
 11
 
-BUTTON
-493
-73
-591
-106
-NIL
-communities\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
 SLIDER
 622
 437
@@ -1567,6 +1622,39 @@ node-range-static-b
 1
 NIL
 HORIZONTAL
+
+SWITCH
+489
+75
+630
+108
+is-rewire-active
+is-rewire-active
+1
+1
+-1000
+
+SWITCH
+686
+74
+836
+107
+is-growing-active
+is-growing-active
+1
+1
+-1000
+
+SWITCH
+696
+137
+842
+170
+is-leaving-active
+is-leaving-active
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1595,7 +1683,7 @@ HORIZONTAL
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab, or where workarounds were needed for missing features)
 
 ## RELATED MODELS
 
@@ -1910,7 +1998,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.0
+NetLogo 6.2.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
