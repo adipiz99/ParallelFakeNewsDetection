@@ -34,6 +34,33 @@ netlogoCommands.set_node_range(test_sa_2.node_range)
 netlogoCommands.set_warning_impact(test_sa_2.warning_impact)
 netlogoCommands.set_warning_impact_neutral(test_sa_2.warning_impact_neutral)
 
+# Setup dynamic network params
+rewiring = env.rewire()
+if (not rewiring):
+    env.netlogo.toggle_rewire()
+
+growing = env.grow()
+if (not growing):
+    env.netlogo.toggle_growth()
+
+leaving = env.leave()
+if (not leaving):
+    env.netlogo.toggle_leaving()
+
+growth_percentages = [80, 60, 50, 30, 20, 10] # Percentages of network growth
+growth_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next growth percentage
+leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
+leave_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next leave percentage
+rewire_probability = 0.3 # Probability of rewiring a node
+
+env.params.setGrowthPercentages(growth_percentages)
+env.params.setGrowthTicks(growth_ticks)
+env.params.setLeavePercentages(leave_percentages)
+env.params.setLeaveTicks(leave_ticks)
+netlogoCommands.set_rewire_probability(rewire_probability)
+
+# end dynamic network params
+
 total_nodes = netlogoCommands.get_total_agents()
 total_ticks = netlogoCommands.get_total_ticks()
 
@@ -76,6 +103,11 @@ for i in range(len(network_polarization)):
                     obs, reward, terminated, done, info, action = dql.predict_sa_action(env, obs)
                 else:
                     obs, reward, terminated, done, info = env.step(0)
+
+                env.rewire()
+                env.leave()
+                env.grow()
+                
             global_cascades.append(netlogoCommands.get_global_cascade_fraction())
 
         new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [calculate_fraction(global_cascades)]})

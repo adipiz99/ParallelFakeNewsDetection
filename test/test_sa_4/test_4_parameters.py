@@ -139,6 +139,53 @@ class NetlogoCommands:
                 self.activate_static_b_node()
                 self.go()
 
+    def kill_workspace(self):
+        pass
+    
+    def get_rewire(self):
+        return self.netlogo.report('get-rewire')
+    
+    def toggle_rewire(self):
+        return self.netlogo.report('toggle-rewire')
+    
+    def get_growth(self):
+        return self.netlogo.report('get-growing')
+    
+    def toggle_growth(self):
+        return self.netlogo.report('toggle-growing')
+    
+    def get_leaving(self):
+        return self.netlogo.report('get-leaving')
+
+    def toggle_leaving(self):
+        return self.netlogo.report('toggle-leaving')
+    
+    def get_rewire_probability(self):
+        return self.netlogo.report('rewire-prob')
+    
+    def set_rewire_probability(self, value):
+        self.netlogo.command('set rewire-prob {}'.format(value))
+
+    def export_network(self, filename):
+        self.netlogo.command('export-data {}'.format('"' + filename + '"'))
+
+    def import_network(self, filename):
+        self.netlogo.command('import-data {}'.format('"' + filename + '"'))
+
+    def add_agents(self, number):
+        self.netlogo.command('add-agents {}'.format(number))
+
+    def remove_agents(self, number):
+        self.netlogo.command('remove-agents {}'.format(number))
+
+def calculate_fraction(values):
+    count = 0
+    for i in range(len(values)):
+        if (values[i]> 0.5):
+            count += 1
+    
+    return count/len(values)
+
 def calculate_fraction(values):
     count = 0
     for i in range(len(values)):

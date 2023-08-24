@@ -6,7 +6,8 @@ from test_6_parameters import *
 import numpy as np
 from collections import defaultdict
 
-netlogo = pyNetLogo.NetLogoLink(gui=False)
+netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6.2.2")
+netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)

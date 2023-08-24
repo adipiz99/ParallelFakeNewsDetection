@@ -4,7 +4,8 @@ import pandas as pd
 from pathlib import Path
 from test_1_parameters import *
 
-netlogo = pyNetLogo.NetLogoLink(gui=False)
+netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6.2.2")
+netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
@@ -17,6 +18,7 @@ network_polarization = test_1.network_polarization[0:3]
 
 netlogoCommands.set_opinion_polarization(0)
 netlogoCommands.set_initial_opinion_metric_value(0.5)
+
 
 global_cascades = []
 global_cascades_means = []

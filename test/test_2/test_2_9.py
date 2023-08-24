@@ -5,7 +5,8 @@ import pandas as pd
 from pathlib import Path
 from test_2_parameters import *
 
-netlogo = pyNetLogo.NetLogoLink(gui=False)
+netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6.2.2")
+netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
