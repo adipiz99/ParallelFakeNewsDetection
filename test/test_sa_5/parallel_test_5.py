@@ -13,9 +13,11 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size() # Number of processes
 file_name = "test_" + str(rank + 1) + ".csv"
+netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6.2.2")
+
 
 params = test_sa_5()
-netlogo = pyNetLogo.NetLogoLink(gui=False)
+netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
