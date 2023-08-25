@@ -8,7 +8,7 @@ import time
 
 
 class DeepQLearning:
-    
+
     def agent(self, state_shape, action_shape):
 
         learning_rate = 0.001
@@ -127,6 +127,10 @@ class DeepQLearning:
                 observation = new_observation
                 total_training_rewards += reward
 
+                env.rewire()
+                env.leave()
+                env.grow()
+
                 if terminated:
                     print('Total training rewards: {} after n steps = {} with final reward = {}'.format(total_training_rewards, episode, reward))
 
@@ -139,6 +143,8 @@ class DeepQLearning:
                     
             reward_over_episodes.append(wrapped_env.return_queue[-1])
             epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay * episode)
+            
+
 
         total_rewards.append(reward_over_episodes)
 

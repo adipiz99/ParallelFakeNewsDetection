@@ -62,7 +62,6 @@ env.params.setGrowthTicks(growth_ticks)
 env.params.setLeavePercentages(leave_percentages)
 env.params.setLeaveTicks(leave_ticks)
 netlogoCommands.set_rewire_probability(rewire_probability)
-
 # end dynamic network params
 
 total_nodes = netlogoCommands.get_total_agents()
@@ -107,11 +106,6 @@ for i in range(len(network_polarization)):
                     obs = dql.predict_sa_action(env, obs)
                 else:
                     obs = env.step(0)
-
-                env.rewire(filename = "./netlogo/world.csv")
-                env.leave()
-                env.grow()
-
             global_cascades.append(netlogoCommands.get_global_cascade_fraction())
 
         new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [calculate_fraction(global_cascades)]})

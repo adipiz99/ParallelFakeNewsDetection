@@ -41,7 +41,19 @@ class FakeNewsSimulation(Env):
 
         super().reset(seed=seed)
 
-        self.netlogo.setup() 
+        self.netlogo.setup()
+        rewiring = self.netlogo.get_rewire()
+        if (not rewiring):
+            self.netlogo.toggle_rewire()
+
+        growing = self.netlogo.get_growth()
+        if (not growing):
+            self.netlogo.toggle_growth()
+
+        leaving = self.netlogo.get_leaving()
+        if (not leaving):
+            self.netlogo.toggle_leaving()
+
         self.global_cascade = self.netlogo.get_global_cascade_fraction()
         self.most_influent_b_nodes = self.netlogo.get_most_influent_a_nodes(self.node_span, self.criteria)
         self.global_opinion_metric_mean = self.netlogo.get_global_opinion_metric_mean()
@@ -93,16 +105,16 @@ class FakeNewsSimulation(Env):
     def close(self):
         self.netlogo.kill_workspace()
 
-    def rewire(self, filename):
+    def rewire(self):
         is_rewiring_active = self.netlogo.get_rewire()
         rewire_prob = self.netlogo.get_rewire_probability()
-        self.netlogo.export_network(filename)
+        self.netlogo.export_network("world.csv")
 
         if(not is_rewiring_active):
             return False
 
         # Input
-        data_file = filename
+        data_file = "./netlogo/world.csv"
 
         # Delimiter
         data_file_delimiter = ','
@@ -126,7 +138,7 @@ class FakeNewsSimulation(Env):
         column_names = [i for i in range(0, largest_column_count)]
 
         # Read csv
-        df = pd.read_csv(data_file, header=None, delimiter=data_file_delimiter, names=column_names)
+        df = pd.read_csv(data_file, header=None, delimiter=data_file_delimiter, names=column_names, low_memory=False)
 
         begin_index = 0
         end_index = 0

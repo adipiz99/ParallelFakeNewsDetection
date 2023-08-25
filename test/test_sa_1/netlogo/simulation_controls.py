@@ -7,7 +7,7 @@ class NetlogoCommands:
     def __init__(self, netlogo, modelfile):
         self.netlogo = netlogo
         self.modelfile = modelfile
-        self.netlogo.load_model(modelfile)
+        #self.netlogo.load_model(modelfile)
         
     def get_a_active_agents(self):
         return self.netlogo.report("get-a-active-agents")
@@ -42,8 +42,72 @@ class NetlogoCommands:
             case self.BETWENNESS:
                 return self.netlogo.report('get-most-influent-a-nodes-by-betweenness {}'.format(node_span))
     
+    def set_opinion_polarization(self, value):
+        self.netlogo.command("set P_O {}".format(value))
+
+    def set_network_polarization(self, value):
+        self.netlogo.command("set P_N {}".format(value))
+    
+    def set_treshold(self, value):
+        self.netlogo.command("set teta {}".format(value))
+    
+    def set_nodes(self, value):
+        self.netlogo.command("set nb-nodes {}".format(value))
+
+    def set_initial_opinion_metric_value(self, value):
+        self.netlogo.command("set initial-opinion-metric-value {}".format(value))
+    
+    def set_opinion_metric_step(self, value):
+        self.netlogo.command("set opinion-metric-step {}".format(value))
+
     def get_global_opinion_metric_mean(self):
         return self.netlogo.report('get-global-opinion-metric-mean')
+    
+    def set_opinion_polarization(self, value):
+        self.netlogo.command("set P_O {}".format(value))
+
+    def set_network_polarization(self, value):
+        self.netlogo.command("set P_N {}".format(value))
+    
+    def set_treshold(self, value):
+        self.netlogo.command("set teta {}".format(value))
+    
+    def set_nodes(self, value):
+        self.netlogo.command("set nb-nodes {}".format(value))
+
+    def set_initial_opinion_metric_value(self, value):
+        self.netlogo.command("set initial-opinion-metric-value {}".format(value))
+    
+    def set_opinion_metric_step(self, value):
+        self.netlogo.command("set opinion-metric-step {}".format(value))
+
+    def set_warning(self, value):
+        if (value == "global"):
+            self.netlogo.command("set global-warning true")
+        else:
+            self.netlogo.command("set global-warning false")
+    
+    def set_node_range(self, value):
+        self.netlogo.command("set node-range {}".format(value))
+    
+    def set_node_range_static_b(self, value):
+        self.netlogo.command("set node-range-static-b {}".format(value))
+
+    def set_warning_impact(self, value):
+        self.netlogo.command("set warning-impact {}".format(value))
+    
+    def set_warning_impact_neutral(self, value):
+        self.netlogo.command("set warning-impact-neutral {}".format(value))
+    
+    def set_echo_chamber_fraction(self, value):
+        self.netlogo.command("set echo-chamber-fraction {}".format(value))
+    
+    def get_current_tick(self):
+        return self.netlogo.report("get-current-tick")
+    
+    def get_total_ticks(self):
+        return self.netlogo.report("total-ticks")
+
     
     def setup(self):
         self.netlogo.command('setup')
