@@ -145,6 +145,7 @@ class FakeNewsSimulation(Env):
         counting_agents = False
         max_agent_id = 0
         super_agent_id = 0
+        agent_ids = []
 
         #read lines one by one
         for index, row in df.iterrows():
@@ -160,10 +161,13 @@ class FakeNewsSimulation(Env):
                 value = int(row[0])
                 if(value > max_agent_id):
                     max_agent_id = value
+                    #saving every existing id
+                    agent_ids.append(value)
                 
                 if(row[8] == '{breed super-agents}'):
                     super_agent_id = value
 
+        # print(len(agent_ids))
         rewiring = False
 
         for index, row in df.iterrows():
@@ -179,11 +183,11 @@ class FakeNewsSimulation(Env):
                 #calculate rewiring probability
                 if(random.random() <= rewire_prob):
                     #generate a random between 0 and max_agent_id
-                    random_agent_id = random.randint(0, max_agent_id)
+                    random_agent_id = random.choice(agent_ids)
                     current_agent_id = int(row[0].split(' ')[1].split('}')[0])
 
                     while random_agent_id == current_agent_id:
-                        random_agent_id = random.randint(0, max_agent_id)
+                        random_agent_id = random.choice(agent_ids)
 
                     if random_agent_id != super_agent_id:
                         df.at[index, 1] = '{basic-agent ' + str(random_agent_id) + '}'

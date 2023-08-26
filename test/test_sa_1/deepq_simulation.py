@@ -128,8 +128,8 @@ class DeepQLearning:
                 total_training_rewards += reward
 
                 env.rewire()
-                env.leave()
                 env.grow()
+                env.leave()
 
                 if terminated:
                     print('Total training rewards: {} after n steps = {} with final reward = {}'.format(total_training_rewards, episode, reward))
