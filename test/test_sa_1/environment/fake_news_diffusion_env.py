@@ -10,6 +10,7 @@ class FakeNewsSimulation(Env):
     netlogo = 0
     environment_utils = 0
     params = NetlogoSimulationParameters()
+    tick_count_started = False
 
     def __init__(self, netlogoCommands : NetlogoCommands):
         super(FakeNewsSimulation, self).__init__()
@@ -205,7 +206,12 @@ class FakeNewsSimulation(Env):
         is_network_growing = self.netlogo.get_growth()
 
         if(is_network_growing):
-            tick = self.netlogo.get_current_tick()
+            if(self.tick_count_started):
+                tick = self.netlogo.get_current_tick()
+            else:  
+                self.tick_count_started = True
+                tick = 0
+
             growth_ticks = self.params.getGrowthTicks()
             growth_percentages = self.params.getGrowthPercentages()
             index = 0
