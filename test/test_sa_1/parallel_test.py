@@ -23,7 +23,7 @@ netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)#, netlogo_
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
-env = FakeNewsSimulation(netlogoCommands)
+env = FakeNewsSimulation(netlogoCommands, rank)
 
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
 netlogoCommands.set_opinion_polarization(test_sa_1.opinion_polarization)

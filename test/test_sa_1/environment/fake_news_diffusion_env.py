@@ -11,14 +11,16 @@ class FakeNewsSimulation(Env):
     environment_utils = 0
     params = NetlogoSimulationParameters()
     tick_count_started = False
+    proc_id = 0
 
-    def __init__(self, netlogoCommands : NetlogoCommands):
+    def __init__(self, netlogoCommands : NetlogoCommands, process_id):
         super(FakeNewsSimulation, self).__init__()
 
         print("Initialinzing the environment...")
         
         self.netlogo = netlogoCommands
         self.environment_utils = EnvironmentUtils()
+        self.proc_id = process_id
 
         low = np.array([0.0, 0.0, 0.0])
         high = np.array([1.0, 1.0, 1.0])
@@ -109,13 +111,13 @@ class FakeNewsSimulation(Env):
     def rewire(self):
         is_rewiring_active = self.netlogo.get_rewire()
         rewire_prob = self.netlogo.get_rewire_probability()
-        self.netlogo.export_network("world.csv")
+        self.netlogo.export_network("world_{}.csv".format(self.proc_id))
 
         if(not is_rewiring_active):
             return False
 
         # Input
-        data_file = "./netlogo/world.csv"
+        data_file = "./netlogo/world_{}.csv".format(self.proc_id)
 
         # Delimiter
         data_file_delimiter = ','
