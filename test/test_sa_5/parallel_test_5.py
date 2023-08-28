@@ -106,11 +106,6 @@ for i in range(len(network_polarization)):
                     obs = dql.predict_sa_action(env, obs)
                 else:
                     obs = env.step(0)
-
-                env.rewire()
-                env.leave()
-                env.grow()
-                
             global_cascades.append(netlogoCommands.get_global_cascade_fraction())
 
         new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [calculate_fraction(global_cascades)]})

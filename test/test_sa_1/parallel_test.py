@@ -19,7 +19,7 @@ netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6
 #netlogo_version = "6.3.0"
 
 params = test_sa_1()
-netlogo = pyNetLogo.NetLogoLink(gui=False)#, netlogo_home=netlogo_path)#, netlogo_version=netlogo_version)
+netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)#, netlogo_version=netlogo_version)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)

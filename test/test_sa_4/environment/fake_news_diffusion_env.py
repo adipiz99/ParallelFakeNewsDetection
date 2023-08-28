@@ -41,7 +41,19 @@ class FakeNewsSimulation(Env):
 
         super().reset(seed=seed)
 
-        self.netlogo.setup() 
+        self.netlogo.setup()
+        rewiring = self.netlogo.get_rewire()
+        if (not rewiring):
+            self.netlogo.toggle_rewire()
+
+        growing = self.netlogo.get_growth()
+        if (not growing):
+            self.netlogo.toggle_growth()
+
+        leaving = self.netlogo.get_leaving()
+        if (not leaving):
+            self.netlogo.toggle_leaving()
+
         self.global_cascade = self.netlogo.get_global_cascade_fraction()
         self.most_influent_b_nodes = self.netlogo.get_most_influent_a_nodes(self.node_span, self.criteria)
         self.global_opinion_metric_mean = self.netlogo.get_global_opinion_metric_mean()
@@ -126,13 +138,14 @@ class FakeNewsSimulation(Env):
         column_names = [i for i in range(0, largest_column_count)]
 
         # Read csv
-        df = pd.read_csv(data_file, header=None, delimiter=data_file_delimiter, names=column_names)
+        df = pd.read_csv(data_file, header=None, delimiter=data_file_delimiter, names=column_names, low_memory=False)
 
         begin_index = 0
         end_index = 0
         counting_agents = False
         max_agent_id = 0
         super_agent_id = 0
+        agent_ids = []
 
         #read lines one by one
         for index, row in df.iterrows():
@@ -148,10 +161,13 @@ class FakeNewsSimulation(Env):
                 value = int(row[0])
                 if(value > max_agent_id):
                     max_agent_id = value
+                    #saving every existing id
+                    agent_ids.append(value)
                 
                 if(row[8] == '{breed super-agents}'):
                     super_agent_id = value
 
+        # print(len(agent_ids))
         rewiring = False
 
         for index, row in df.iterrows():
@@ -167,11 +183,11 @@ class FakeNewsSimulation(Env):
                 #calculate rewiring probability
                 if(random.random() <= rewire_prob):
                     #generate a random between 0 and max_agent_id
-                    random_agent_id = random.randint(0, max_agent_id)
+                    random_agent_id = random.choice(agent_ids)
                     current_agent_id = int(row[0].split(' ')[1].split('}')[0])
 
                     while random_agent_id == current_agent_id:
-                        random_agent_id = random.randint(0, max_agent_id)
+                        random_agent_id = random.choice(agent_ids)
 
                     if random_agent_id != super_agent_id:
                         df.at[index, 1] = '{basic-agent ' + str(random_agent_id) + '}'

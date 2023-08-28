@@ -13,9 +13,10 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size() # Number of processes
 file_name = "test_" + str(rank + 1) + ".csv"
+netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6.2.2")
 
 params = test_sa_3()
-netlogo = pyNetLogo.NetLogoLink(gui=False)
+netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)#, netlogo_version=netlogo_version)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
@@ -105,11 +106,6 @@ for i in range(len(network_polarization)):
                     obs, reward, terminated, done, info, action = dql.predict_sa_action(env, obs)
                 else:
                     obs, reward, terminated, done, info = env.step(0)
-
-                env.rewire()
-                env.leave()
-                env.grow()
-                
             global_cascades.append(netlogoCommands.get_global_cascade_fraction())
 
         new_df = pd.DataFrame({"Node Range Static B": [node_range_static_b[j]], "Network Polarization": [network_polarization[i]], 'Virality': [calculate_fraction(global_cascades)]})

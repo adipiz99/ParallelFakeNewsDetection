@@ -557,13 +557,9 @@ to add-agents [N]
 end
 
 to remove-agents [num-to-remove]
-  let eligible-turtles turtles with [color != violet]
-  let num-eligible count eligible-turtles
-  let agents-to-remove min (list num-to-remove num-eligible)
-  ask n-of agents-to-remove eligible-turtles [ die ]
+  let agents-to-remove (n-of num-to-remove basic-agents)
+  ask agents-to-remove [ die ]
 end
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clusterers
