@@ -59,6 +59,9 @@ class NetlogoCommands:
 
     def activate_static_b_node(self):
         self.netlogo.command('activate-static-b-agents')
+    
+    def activate_repetition_bias(self):
+        self.netlogo.command('set is-repetition-bias-active true')
 
     def choose_action(self, choice):
         match choice:

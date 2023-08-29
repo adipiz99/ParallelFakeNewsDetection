@@ -41,6 +41,7 @@ basic-agents-own [
   reiterate-counter          ;; Counter needed to determine whether or not the agent will reiterate his opinion
   opinion-metric             ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
   is-opinion-b-static        ;; Boolean that when set to true an agent will always sustain opinion b
+  repetition-bias            ;; Variable used to quantify the degree of the repetion bias. The values are included between 0.00 and 1.00
 ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -279,6 +280,10 @@ to set-characteristics
   set reiterate-counter 0
   set opinion-metric initial-opinion-metric-value
   set is-opinion-b-static false
+  if is-repetition-bias-active = true [
+    set repetition-bias random-float 1.0
+    ;; show repetition-bias
+  ]
 end
 
 ;; Function to setup the network using the Erdős–Rényi model
@@ -1648,6 +1653,17 @@ SWITCH
 170
 is-leaving-active
 is-leaving-active
+1
+1
+-1000
+
+SWITCH
+873
+85
+1059
+118
+is-repetition-bias-active
+is-repetition-bias-active
 1
 1
 -1000

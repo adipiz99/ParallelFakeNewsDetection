@@ -18,32 +18,29 @@ from netlogo.simulation_parameters import NetlogoSimulationParameters
 netlogo = pyNetLogo.NetLogoLink(gui=True)
 modelfile = os.path.abspath('./netlogo/FakeNewsSimulation.nlogo')
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
+netlogoCommands.activate_repetition_bias()
 env = FakeNewsSimulation(netlogoCommands)
+
 env.netlogo.setup()
 
-rewired = env.rewire()
-growth = env.grow()
-leave = env.leave()
-
-print("Rewired: " + str(rewired))
-print("Growth: " + str(growth))
-print("Leave: " + str(leave))
-
-env.netlogo.toggle_rewire()
-env.netlogo.toggle_growth()
-env.netlogo.toggle_leaving()
-
-growth = env.grow()
+# rewired = env.rewire()
 # growth = env.grow()
-# growth = env.grow()
+# leave = env.leave()
 
-leave = env.leave()
-leave = env.leave()
+# print("Rewired: " + str(rewired))
+# print("Growth: " + str(growth))
+# print("Leave: " + str(leave))
+
+# env.netlogo.toggle_rewire()
+# env.netlogo.toggle_growth()
+# env.netlogo.toggle_leaving()
+
+# growth = env.grow()
 # leave = env.leave()
 # leave = env.leave()
-rewired = env.rewire()
-print("Leave: " + str(leave))
-print("Rewired: " + str(rewired))
-print("Growth: " + str(growth))
+# rewired = env.rewire()
+# print("Leave: " + str(leave))
+# print("Rewired: " + str(rewired))
+# print("Growth: " + str(growth))
 
 env.netlogo.kill_workspace()
