@@ -199,9 +199,9 @@ class FakeNewsSimulation(Env):
 
         #remove header
         df1 = df.tail(-1)
-        df1.to_csv("./netlogo/world.csv", index=False, header=False)
+        df1.to_csv("./netlogo/world_{}.csv".format(self.proc_id), index=False, header=False)
 
-        self.netlogo.import_network("world.csv")
+        self.netlogo.import_network("world_{}.csv".format(self.proc_id))
         return True
 
     def grow(self):
@@ -213,7 +213,7 @@ class FakeNewsSimulation(Env):
             else:  
                 self.tick_count_started = True
                 tick = 0
-
+        
             growth_ticks = self.params.getGrowthTicks()
             growth_percentages = self.params.getGrowthPercentages()
             index = 0
@@ -239,7 +239,11 @@ class FakeNewsSimulation(Env):
         is_nodes_leaving = self.netlogo.get_leaving()
 
         if(is_nodes_leaving):
-            tick = self.netlogo.get_current_tick()
+            if(self.tick_count_started):
+                tick = self.netlogo.get_current_tick()
+            else:  
+                self.tick_count_started = True
+                tick = 0
             leave_ticks = self.params.getLeaveTicks()
             leave_percentages = self.params.getLeavePercentages()
             index = 0

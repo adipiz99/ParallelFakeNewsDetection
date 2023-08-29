@@ -51,7 +51,7 @@ leaving = env.netlogo.get_leaving()
 if (not leaving):
     env.netlogo.toggle_leaving()
 
-growth_percentages = [80, 60, 50, 30, 20, 10] # Percentages of network growth
+growth_percentages = [60, 50, 40, 30, 20, 10] # Percentages of network growth
 growth_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next growth percentage
 leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
 leave_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next leave percentage
