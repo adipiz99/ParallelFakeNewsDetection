@@ -103,6 +103,9 @@ class NetlogoCommands:
     
     def set_rewire_probability(self, value):
         self.netlogo.command('set rewire-prob {}'.format(value))
+    
+    # def set_repetition_bias(self, value):
+    #     self.netlogo.command('set repetition-bias {}'.format(value))
 
     def export_network(self, filename):
         self.netlogo.command('export-data {}'.format('"' + filename + '"'))
@@ -115,4 +118,26 @@ class NetlogoCommands:
 
     def remove_agents(self, number):
         self.netlogo.command('remove-agents {}'.format(number))
+
+    def get_agent_ids(self):
+        return self.netlogo.report('get-agent-ids')
     
+    def get_a_counter_by_id(self, id):
+        return self.netlogo.report('get-a-counter-by-id {}'.format(id))
+    
+    def get_b_counter_by_id(self, id):
+        return self.netlogo.report('get-b-counter-by-id {}'.format(id))
+    
+    def set_repetition_a_bias(self, value, id):
+        command = f'ask one-of basic-agents with [who = {id}] [set repetition-bias-towards-a-news {value}]'
+        self.netlogo.command(command)
+
+    def set_repetition_b_bias(self, value, id):
+        command = f'ask one-of basic-agents with [who = {id}] [set repetition-bias-towards-b-news {value}]'
+        self.netlogo.command(command)
+
+    def get_repetition_a_bias_by_id(self, id):
+        return self.netlogo.report('get-repetition-a-bias-by-id {}'.format(id))
+    
+    def get_repetition_b_bias_by_id(self, id):
+        return self.netlogo.report('get-repetition-b-bias-by-id {}'.format(id))

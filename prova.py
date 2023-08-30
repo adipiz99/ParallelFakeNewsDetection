@@ -23,6 +23,19 @@ env = FakeNewsSimulation(netlogoCommands)
 
 env.netlogo.setup()
 
+ids = env.netlogo.get_agent_ids()
+#print("Ids type: " + str(type(ids)))
+print("Ids: " + str(ids))
+for id in ids:
+    print("Id: " + str(id))
+    a_count = env.netlogo.get_a_counter_by_id(id)
+    print("A count: " + str(a_count))
+# print("Ids: " + str(ids))
+
+
+
+
+
 # rewired = env.rewire()
 # growth = env.grow()
 # leave = env.leave()

@@ -19,29 +19,30 @@ globals [
 ]
 
 basic-agents-own [
-  activation-treshold        ;; Determines how an agent is susceptible to change opinion
-  betweenness                ;; Network analysis parameter
-  eigenvector                ;;
-  closeness                  ;;
-  clustering                 ;;
-  community                  ;;
-  page-rank                  ;;
-  in-degree                  ;;
-  out-degree                 ;;
-  degree                     ;;
-  is-a-active                ;; True if the agent support the fake news
-  is-b-active                ;; True if the agent does not support the fake news
-  is-in-cluster              ;; True if the agent is located in the echo chamber
-  is-active-next             ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion a
-  is-inactive-next           ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion b
-  warning                    ;; When this variable is set to true, the agent is warned that the opinion a is a fake news
-  received-a-news-counter    ;; Counter of opinion a news received
-  received-b-news-counter    ;; Counter of opinion b news received
-  reiterate                  ;; When this variable is set to true, the agent will receive more opinion b news so that is more likely that he will change his opinion from a to b
-  reiterate-counter          ;; Counter needed to determine whether or not the agent will reiterate his opinion
-  opinion-metric             ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
-  is-opinion-b-static        ;; Boolean that when set to true an agent will always sustain opinion b
-  repetition-bias            ;; Variable used to quantify the degree of the repetion bias. The values are included between 0.00 and 1.00
+  activation-treshold             ;; Determines how an agent is susceptible to change opinion
+  betweenness                     ;; Network analysis parameter
+  eigenvector                     ;;
+  closeness                       ;;
+  clustering                      ;;
+  community                       ;;
+  page-rank                       ;;
+  in-degree                       ;;
+  out-degree                      ;;
+  degree                          ;;
+  is-a-active                     ;; True if the agent support the fake news
+  is-b-active                     ;; True if the agent does not support the fake news
+  is-in-cluster                   ;; True if the agent is located in the echo chamber
+  is-active-next                  ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion a
+  is-inactive-next                ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion b
+  warning                         ;; When this variable is set to true, the agent is warned that the opinion a is a fake news
+  received-a-news-counter         ;; Counter of opinion a news received
+  received-b-news-counter         ;; Counter of opinion b news received
+  reiterate                       ;; When this variable is set to true, the agent will receive more opinion b news so that is more likely that he will change his opinion from a to b
+  reiterate-counter               ;; Counter needed to determine whether or not the agent will reiterate his opinion
+  opinion-metric                  ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
+  is-opinion-b-static             ;; Boolean that when set to true an agent will always sustain opinion b
+  repetition-bias-towards-a-news  ;; Variable used to quantify the degree of the repetion bias. The values are included between 0.00 and 1.00
+  repetition-bias-towards-b-news
 ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -214,6 +215,27 @@ to-report toggle-leaving
   report is-leaving-active
 end
 
+to-report get-agent-ids
+  report [who] of basic-agents
+end
+
+to-report get-a-counter-by-id [target-id]
+  report [received-a-news-counter] of basic-agents with [who = target-id]
+end
+
+to-report get-b-counter-by-id [target-id]
+  report [received-b-news-counter] of basic-agents with [who = target-id]
+end
+
+to-report get-repetition-a-bias-by-id [target-id]
+  report [repetition-bias-towards-a-news] of basic-agents with [who = target-id]
+end
+
+to-report get-repetition-b-bias-by-id [target-id]
+  report [repetition-bias-towards-b-news] of basic-agents with [who = target-id]
+end
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Layouts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -280,10 +302,8 @@ to set-characteristics
   set reiterate-counter 0
   set opinion-metric initial-opinion-metric-value
   set is-opinion-b-static false
-  if is-repetition-bias-active = true [
-    set repetition-bias random-float 1.0
-    ;; show repetition-bias
-  ]
+  set repetition-bias-towards-a-news 0
+  set repetition-bias-towards-b-news 0
 end
 
 ;; Function to setup the network using the Erdős–Rényi model
@@ -934,7 +954,7 @@ to calculate-opinion-metric [agent opinion]
 
       ifelse opinion = "a" [
         ask agent [
-          set opinion-metric opinion-metric + opinion-metric-step
+          set opinion-metric opinion-metric + opinion-metric-step - repetition-bias-towards-b-news
           if opinion-metric > 1 [
             set opinion-metric 1
           ]
@@ -953,7 +973,8 @@ to calculate-opinion-metric [agent opinion]
         ]
       ][
         ask agent [
-          set opinion-metric opinion-metric - opinion-metric-step
+          ;; if the agent is affected by repetetion bias will be more inclined to support opinion a (with a slowdown towards opinion b)
+          set opinion-metric opinion-metric - opinion-metric-step + repetition-bias-towards-a-news
           if opinion-metric < 0 [
             set opinion-metric 0
           ]

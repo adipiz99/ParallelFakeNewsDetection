@@ -16,10 +16,10 @@ file_name = "test_" + str(rank + 1) + ".csv"
 
 #Netlogo info (linux only)
 netlogo_path = os.path.abspath("/home/musimathicslab/FakeNewsDetection/NetLogo 6.2.2")
-#netlogo_version = "6.3.0"
+# netlogo_version = "6.3.0"
 
 params = test_sa_1()
-netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)#, netlogo_version=netlogo_version)
+netlogo = pyNetLogo.NetLogoLink(gui=False)#, netlogo_home=netlogo_path)#, netlogo_version=netlogo_version)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
@@ -56,6 +56,8 @@ growth_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next gro
 leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
 leave_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next leave percentage
 rewire_probability = 0.3 # Probability of rewiring a node
+repetition_bias_percentages = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30] # Values of bias growth
+bias_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next value of bias growth
 
 env.params.setGrowthPercentages(growth_percentages)
 env.params.setGrowthTicks(growth_ticks)

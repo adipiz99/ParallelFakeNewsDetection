@@ -264,3 +264,45 @@ class FakeNewsSimulation(Env):
             self.netlogo.remove_agents(agents_to_remove)
             return True
         return False
+    
+    def calculate_repetition_bias(self, agents_with_counters):
+        new_dictionary = {}
+        ids = self.netlogo.get_agent_ids()
+        for id in ids:
+            prev_a_count, prev_b_count = agents_with_counters[id]
+            new_a_count = self.netlogo.get_a_counter_by_id(id)
+            new_b_count = self.netlogo.get_b_counter_by_id(id)
+            print("id: " + str(id) + " prev a: " + str(prev_a_count)+ " new a: " + str(new_a_count))
+            print("id: " + str(id) + " prev b: " + str(prev_b_count)+ " new b: " + str(new_b_count))
+
+            # se arriva una nuova notizia di tipo a aumentiamo il bias di a
+            if new_a_count > prev_a_count:
+                new_dictionary[id] = (new_a_count, prev_b_count)
+                # setto il nuovo valore del bias di a (se vengo esposto da più notizie di tipo a che di b)
+                # e setto il bias di b a 0 poichè uno solo dei due può essere attivo
+                # questo permette anche di poter calcolare il bias sulla quantità di notizie consecutive di un determinato tipo
+                if new_a_count > new_b_count:
+                    a_bias = self.netlogo.get_repetition_a_bias_by_id(id)
+                    self.netlogo.set_repetition_a_bias(a_bias[0] + 0.05, id)
+                    self.netlogo.set_repetition_b_bias(0, id)
+                    # per la print
+                    a_bias = self.netlogo.get_repetition_a_bias_by_id(id)
+                    print("id: " + str(id) + "  a bias: " + str(a_bias[0]))
+
+            # se arriva una nuova notizia di tipo b aumentiamo il bias di b
+            if new_b_count > prev_b_count:
+                new_dictionary[id] = (prev_a_count, new_b_count)
+                if new_b_count > new_a_count:
+                    b_bias = self.netlogo.get_repetition_b_bias_by_id(id)
+                    self.netlogo.set_repetition_b_bias(b_bias[0] + 0.05, id)
+                    self.netlogo.set_repetition_a_bias(0, id)
+                    # per la print
+                    b_bias = self.netlogo.get_repetition_b_bias_by_id(id)
+                    print("id: " + str(id) + "  b bias: " + str(b_bias[0]))
+            
+            # se non arriva nessuna notizia settiamo i vecchi valori (e il bias non viene aggiornato)
+            if (new_a_count == prev_a_count and new_b_count == prev_b_count):
+                new_dictionary[id] = (prev_a_count, prev_b_count)
+
+
+        return new_dictionary

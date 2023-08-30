@@ -107,6 +107,13 @@ class DeepQLearning:
             observation = wrapped_env.reset()
             observation = self.check_tuple(observation)
             terminated = False
+            agents_with_counters = {}
+            ids = env.netlogo.get_agent_ids()
+            for id in ids:
+                a_count = env.netlogo.get_a_counter_by_id(id)
+                b_count = env.netlogo.get_b_counter_by_id(id)
+                agents_with_counters[id] = (a_count, b_count)
+            
             while not terminated:
 
                 steps_to_update_target_model += 1
@@ -123,14 +130,16 @@ class DeepQLearning:
                 
                 if steps_to_update_target_model % 4 == 0 or terminated:
                     self.train(env, replay_memory, self.model, self.target_model, terminated)
-                    env.rewire()
-                    env.grow()
-                    env.leave()
+                    # env.rewire()
+                    # env.grow()
+                    # env.leave()
 
                 observation = new_observation
                 total_training_rewards += reward
 
                 
+                agents_with_counters = env.calculate_repetition_bias(agents_with_counters)
+                env.rewire()
 
                 if terminated:
                     print('Total training rewards: {} after n steps = {} with final reward = {}'.format(total_training_rewards, episode, reward))
