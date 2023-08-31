@@ -1,6 +1,7 @@
 from gymnasium import Env, spaces
 import numpy as np
 import random
+import copy
 import pandas as pd
 from environment.environment_utils import EnvironmentUtils
 from netlogo.simulation_controls import NetlogoCommands
@@ -10,14 +11,17 @@ class FakeNewsSimulation(Env):
     netlogo = 0
     environment_utils = 0
     params = NetlogoSimulationParameters()
+    tick_count_started = False
+    proc_id = 0
 
-    def __init__(self, netlogoCommands : NetlogoCommands):
+    def __init__(self, netlogoCommands : NetlogoCommands, process_id):
         super(FakeNewsSimulation, self).__init__()
 
         print("Initialinzing the environment...")
         
         self.netlogo = netlogoCommands
         self.environment_utils = EnvironmentUtils()
+        self.proc_id = process_id
 
         low = np.array([0.0, 0.0, 0.0])
         high = np.array([1.0, 1.0, 1.0])
@@ -41,7 +45,19 @@ class FakeNewsSimulation(Env):
 
         super().reset(seed=seed)
 
-        self.netlogo.setup() 
+        self.netlogo.setup()
+        rewiring = self.netlogo.get_rewire()
+        if (not rewiring):
+            self.netlogo.toggle_rewire()
+
+        growing = self.netlogo.get_growth()
+        if (not growing):
+            self.netlogo.toggle_growth()
+
+        leaving = self.netlogo.get_leaving()
+        if (not leaving):
+            self.netlogo.toggle_leaving()
+
         self.global_cascade = self.netlogo.get_global_cascade_fraction()
         self.most_influent_b_nodes = self.netlogo.get_most_influent_a_nodes(self.node_span, self.criteria)
         self.global_opinion_metric_mean = self.netlogo.get_global_opinion_metric_mean()
@@ -96,13 +112,13 @@ class FakeNewsSimulation(Env):
     def rewire(self):
         is_rewiring_active = self.netlogo.get_rewire()
         rewire_prob = self.netlogo.get_rewire_probability()
-        self.netlogo.export_network("world.csv")
+        self.netlogo.export_network("world_{}.csv".format(self.proc_id))
 
         if(not is_rewiring_active):
             return False
 
         # Input
-        data_file = "./netlogo/world.csv"
+        data_file = "./netlogo/world_{}.csv".format(self.proc_id)
 
         # Delimiter
         data_file_delimiter = ','
@@ -184,16 +200,21 @@ class FakeNewsSimulation(Env):
 
         #remove header
         df1 = df.tail(-1)
-        df1.to_csv("./netlogo/world.csv", index=False, header=False)
+        df1.to_csv("./netlogo/world_{}.csv".format(self.proc_id), index=False, header=False)
 
-        self.netlogo.import_network("world.csv")
+        self.netlogo.import_network("world_{}.csv".format(self.proc_id))
         return True
 
     def grow(self):
         is_network_growing = self.netlogo.get_growth()
 
         if(is_network_growing):
-            tick = self.netlogo.get_current_tick()
+            if(self.tick_count_started):
+                tick = self.netlogo.get_current_tick()
+            else:  
+                self.tick_count_started = True
+                tick = 0
+        
             growth_ticks = self.params.getGrowthTicks()
             growth_percentages = self.params.getGrowthPercentages()
             index = 0
@@ -219,7 +240,11 @@ class FakeNewsSimulation(Env):
         is_nodes_leaving = self.netlogo.get_leaving()
 
         if(is_nodes_leaving):
-            tick = self.netlogo.get_current_tick()
+            if(self.tick_count_started):
+                tick = self.netlogo.get_current_tick()
+            else:  
+                self.tick_count_started = True
+                tick = 0
             leave_ticks = self.params.getLeaveTicks()
             leave_percentages = self.params.getLeavePercentages()
             index = 0
@@ -240,3 +265,88 @@ class FakeNewsSimulation(Env):
             self.netlogo.remove_agents(agents_to_remove)
             return True
         return False
+    
+    def calculate_repetition_bias(self, agents_with_counters):
+        new_dictionary = {}
+        ids = self.netlogo.get_agent_ids()
+
+        for id in ids:
+            prev_a_count, prev_b_count, a_news_in_row, b_news_in_row = agents_with_counters[id]
+            new_a_count = self.netlogo.get_a_counter_by_id(id)
+            new_b_count = self.netlogo.get_b_counter_by_id(id)
+            # print("id: " + str(id) + " prev a: " + str(prev_a_count)+ " new a: " + str(new_a_count))
+            # print("id: " + str(id) + " prev b: " + str(prev_b_count)+ " new b: " + str(new_b_count))
+
+            # se arriva una nuova notizia di tipo a aumentiamo il bias di a
+            if new_a_count > prev_a_count:
+
+                old_a_news_in_row = copy.copy(a_news_in_row)
+                a_news_in_row += (new_a_count - prev_a_count)
+
+                # setto il nuovo valore del bias di a (se vengo esposto da più notizie di tipo a che di b)
+                # e setto il bias di b a 0 poichè uno solo dei due può essere attivo
+                # questo permette anche di poter calcolare il bias sulla quantità di notizie consecutive di un determinato tipo
+                if new_a_count > new_b_count:
+                    a_bias = self.netlogo.get_repetition_a_bias_by_id(id)
+                    # scelgo di quanto deve aumentare il bias in base a quante a news di fila ha ricevuto
+                    b_news_in_row = 0
+                    rep_bias_value= self.calculate_repetition_bias_growth(a_news_in_row, old_a_news_in_row)
+                    #print("rep bias to add: " + str(rep_bias_value))
+
+                    self.netlogo.set_repetition_a_bias(a_bias[0] + rep_bias_value, id)
+                    self.netlogo.set_repetition_b_bias(0, id)
+                    # per la print
+                    # a_bias = self.netlogo.get_repetition_a_bias_by_id(id)
+                    # print("id: " + str(id) + "  a bias: " + str(a_bias[0]))
+                new_dictionary[id] = (new_a_count, prev_b_count, a_news_in_row, b_news_in_row)
+
+            # se arriva una nuova notizia di tipo b aumentiamo il bias di b
+            if new_b_count > prev_b_count:
+                
+                old_b_news_in_row = copy.copy(b_news_in_row)
+                b_news_in_row += (new_b_count - prev_b_count)
+
+                if new_b_count > new_a_count:
+                    b_bias = self.netlogo.get_repetition_b_bias_by_id(id)
+                    # scelgo di quanto deve aumentare il bias in base a quante b news di fila ha ricevuto
+                    a_news_in_row = 0
+                    rep_bias_value= self.calculate_repetition_bias_growth(b_news_in_row, old_b_news_in_row)
+                    # print("rep bias to add: " + str(rep_bias_value))
+
+                    self.netlogo.set_repetition_b_bias(b_bias[0] + rep_bias_value, id)
+                    self.netlogo.set_repetition_a_bias(0, id)
+                    # per la print
+                    # b_bias = self.netlogo.get_repetition_b_bias_by_id(id)
+                    # print("id: " + str(id) + "  b bias: " + str(b_bias[0]))
+                new_dictionary[id] = (prev_a_count, new_b_count, a_news_in_row, b_news_in_row)
+            
+            # se non arriva nessuna notizia settiamo i vecchi valori (e il bias non viene aggiornato)
+            if (new_a_count == prev_a_count and new_b_count == prev_b_count):
+                new_dictionary[id] = (prev_a_count, prev_b_count, a_news_in_row, b_news_in_row)
+
+
+        return new_dictionary
+    
+    def calculate_repetition_bias_growth(self, news_in_row, old_news_in_row):
+        bias_ticks = self.params.getBiasTicks()
+        rep_bias_values = self.params.getRepetitionBiasValues()
+        rep_bias_value = 0
+        index = 0
+
+        for step in bias_ticks:
+            if(news_in_row > step):
+                index += 1
+            elif(news_in_row <= step):
+                break
+
+        if index >= len(rep_bias_values): # if the index is out of bounds, set it to the last index
+            index = len(rep_bias_values) - 1
+
+        # aggiungiamo il bias ogni 5 news ricevute di fila
+        if news_in_row % 5 == 0:
+            rep_bias_value = rep_bias_values[index]
+        # aggiungiamo anche un aggiornamento se ha superato un multiplo di 5 
+        elif news_in_row > 5 and (old_news_in_row // 5) < (news_in_row // 5):
+            rep_bias_value = rep_bias_values[index]
+
+        return rep_bias_value

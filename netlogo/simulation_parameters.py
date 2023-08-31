@@ -12,6 +12,8 @@ class NetlogoSimulationParameters:
     growth_ticks = [50, 100, 200, 300, 400, 500] # Ticks necessary to reach the next growth percentage
     leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
     leave_ticks = [50, 100, 200, 300, 400, 500] # Ticks necessary to reach the next leave percentage
+    repetition_bias_values = [0.05, 0.10, 0.15, 0.20] # Values of bias growth
+    bias_ticks = [20, 40, 70, 100] # Number of consecutive news necessary to reach the next value of bias growth
 
     def setWarningWeight(self, value):
         self.WarningWeight = value
@@ -100,6 +102,31 @@ class NetlogoSimulationParameters:
         if(len(percentages) == len(ticks)):
             self.growth_percentages = percentages
             self.growth_ticks = ticks
+            return True
+        return False
+    
+    def getRepetitionBiasValues(self):
+        return self.repetition_bias_values
+    
+    def getBiasTicks(self):
+        return self.bias_ticks
+    
+    def setRepetitionBiasValues(self, values):
+        if(len(values) == len(self.bias_ticks)):
+            self.repetition_bias_values = values
+            return True
+        return False
+    
+    def setBiasTicks(self, ticks):
+        if(len(ticks) == len(self.repetition_bias_values)):
+            self.bias_ticks = ticks
+            return True
+        return False
+    
+    def setRepetitionBiasParameters(self, values, ticks):
+        if(len(values) == len(ticks)):
+            self.repetition_bias_values = values
+            self.bias_ticks = ticks
             return True
         return False
     

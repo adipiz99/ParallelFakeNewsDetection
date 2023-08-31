@@ -56,8 +56,8 @@ growth_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next gro
 leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
 leave_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next leave percentage
 rewire_probability = 0.3 # Probability of rewiring a node
-repetition_bias_percentages = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30] # Values of bias growth
-bias_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next value of bias growth
+repetition_bias_values = [0.05, 0.10, 0.15, 0.20] # Values of bias growth
+bias_ticks = [20, 40, 70, 100] # Number of consecutive news necessary to reach the next value of bias growth
 
 env.params.setGrowthPercentages(growth_percentages)
 env.params.setGrowthTicks(growth_ticks)
@@ -65,6 +65,9 @@ env.params.setLeavePercentages(leave_percentages)
 env.params.setLeaveTicks(leave_ticks)
 netlogoCommands.set_rewire_probability(rewire_probability)
 # end dynamic network params
+env.params.setRepetitionBiasValues(repetition_bias_values)
+env.params.setBiasTicks(bias_ticks)
+# end bias params
 
 total_nodes = netlogoCommands.get_total_agents()
 total_ticks = netlogoCommands.get_total_ticks()
@@ -110,7 +113,7 @@ for i in range(len(network_polarization)):
                     obs = env.step(0)
             global_cascades.append(netlogoCommands.get_global_cascade_fraction())
 
-        new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [calculate_fraction(global_cascades)]})
+        new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [netlogoCommands.calculate_fraction(global_cascades)]})
         df = pd.concat([df, new_df], ignore_index=True)
 
 total_time = (time.time() - start_time)/60

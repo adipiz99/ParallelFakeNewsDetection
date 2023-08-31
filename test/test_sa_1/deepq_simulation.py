@@ -107,12 +107,15 @@ class DeepQLearning:
             observation = wrapped_env.reset()
             observation = self.check_tuple(observation)
             terminated = False
+            
             agents_with_counters = {}
             ids = env.netlogo.get_agent_ids()
             for id in ids:
                 a_count = env.netlogo.get_a_counter_by_id(id)
                 b_count = env.netlogo.get_b_counter_by_id(id)
-                agents_with_counters[id] = (a_count, b_count)
+                a_news_in_row = 0
+                b_news_in_row = 0
+                agents_with_counters[id] = (a_count, b_count, a_news_in_row, b_news_in_row)
             
             while not terminated:
 
