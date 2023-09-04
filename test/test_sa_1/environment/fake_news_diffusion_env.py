@@ -228,12 +228,14 @@ class FakeNewsSimulation(Env):
             if index >= len(growth_percentages): # if the index is out of bounds, set it to the last index
                 index = len(growth_percentages) - 1
 
-            growth_percentage = growth_percentages[index]
-            basic_agents = self.netlogo.get_total_agents()
-            agents_to_add = int((basic_agents/100)*growth_percentage)
+            if(tick == growth_ticks[index]):
+                # print("grow attivata")
+                growth_percentage = growth_percentages[index]
+                basic_agents = self.netlogo.get_total_agents()
+                agents_to_add = int((basic_agents/100)*growth_percentage)
 
-            self.netlogo.add_agents(agents_to_add)
-            return True
+                self.netlogo.add_agents(agents_to_add)
+                return True
         return False
     
     def leave(self):
@@ -258,12 +260,14 @@ class FakeNewsSimulation(Env):
             if index >= len(leave_percentages): # if the index is out of bounds, set it to the last index
                 index = len(leave_percentages) - 1
 
-            leave_percentage = leave_percentages[index]
-            basic_agents = self.netlogo.get_total_agents()
-            agents_to_remove = int((basic_agents/100)*leave_percentage)
+            if(tick == leave_ticks[index]):
+                # print("leave attivata")
+                leave_percentage = leave_percentages[index]
+                basic_agents = self.netlogo.get_total_agents()
+                agents_to_remove = int((basic_agents/100)*leave_percentage)
 
-            self.netlogo.remove_agents(agents_to_remove)
-            return True
+                self.netlogo.remove_agents(agents_to_remove)
+                return True
         return False
     
     def calculate_repetition_bias(self, agents_with_counters):
@@ -274,8 +278,8 @@ class FakeNewsSimulation(Env):
             prev_a_count, prev_b_count, a_news_in_row, b_news_in_row = agents_with_counters[id]
             new_a_count = self.netlogo.get_a_counter_by_id(id)
             new_b_count = self.netlogo.get_b_counter_by_id(id)
-            # print("id: " + str(id) + " prev a: " + str(prev_a_count)+ " new a: " + str(new_a_count))
-            # print("id: " + str(id) + " prev b: " + str(prev_b_count)+ " new b: " + str(new_b_count))
+            print("id: " + str(id) + " prev a: " + str(prev_a_count)+ " new a: " + str(new_a_count))
+            print("id: " + str(id) + " prev b: " + str(prev_b_count)+ " new b: " + str(new_b_count))
 
             # se arriva una nuova notizia di tipo a aumentiamo il bias di a
             if new_a_count > prev_a_count:
@@ -291,13 +295,13 @@ class FakeNewsSimulation(Env):
                     # scelgo di quanto deve aumentare il bias in base a quante a news di fila ha ricevuto
                     b_news_in_row = 0
                     rep_bias_value= self.calculate_repetition_bias_growth(a_news_in_row, old_a_news_in_row)
-                    #print("rep bias to add: " + str(rep_bias_value))
+                    print("rep bias to add: " + str(rep_bias_value))
 
                     self.netlogo.set_repetition_a_bias(a_bias[0] + rep_bias_value, id)
                     self.netlogo.set_repetition_b_bias(0, id)
                     # per la print
-                    # a_bias = self.netlogo.get_repetition_a_bias_by_id(id)
-                    # print("id: " + str(id) + "  a bias: " + str(a_bias[0]))
+                    a_bias = self.netlogo.get_repetition_a_bias_by_id(id)
+                    print("id: " + str(id) + "  a bias: " + str(a_bias[0]))
                 new_dictionary[id] = (new_a_count, prev_b_count, a_news_in_row, b_news_in_row)
 
             # se arriva una nuova notizia di tipo b aumentiamo il bias di b
@@ -311,13 +315,13 @@ class FakeNewsSimulation(Env):
                     # scelgo di quanto deve aumentare il bias in base a quante b news di fila ha ricevuto
                     a_news_in_row = 0
                     rep_bias_value= self.calculate_repetition_bias_growth(b_news_in_row, old_b_news_in_row)
-                    # print("rep bias to add: " + str(rep_bias_value))
+                    print("rep bias to add: " + str(rep_bias_value))
 
                     self.netlogo.set_repetition_b_bias(b_bias[0] + rep_bias_value, id)
                     self.netlogo.set_repetition_a_bias(0, id)
                     # per la print
-                    # b_bias = self.netlogo.get_repetition_b_bias_by_id(id)
-                    # print("id: " + str(id) + "  b bias: " + str(b_bias[0]))
+                    b_bias = self.netlogo.get_repetition_b_bias_by_id(id)
+                    print("id: " + str(id) + "  b bias: " + str(b_bias[0]))
                 new_dictionary[id] = (prev_a_count, new_b_count, a_news_in_row, b_news_in_row)
             
             # se non arriva nessuna notizia settiamo i vecchi valori (e il bias non viene aggiornato)

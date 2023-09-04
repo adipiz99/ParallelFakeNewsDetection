@@ -40,9 +40,10 @@ basic-agents-own [
   reiterate                       ;; When this variable is set to true, the agent will receive more opinion b news so that is more likely that he will change his opinion from a to b
   reiterate-counter               ;; Counter needed to determine whether or not the agent will reiterate his opinion
   opinion-metric                  ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
+  opinion-metric-step
   is-opinion-b-static             ;; Boolean that when set to true an agent will always sustain opinion b
-  repetition-bias-towards-a-news  ;; Variable used to quantify the degree of the repetion bias. The values are included between 0.00 and 1.00
-  repetition-bias-towards-b-news
+  ;; repetition-bias-towards-a-news  ;; Variable used to quantify the degree of the repetion bias. 
+  ;; repetition-bias-towards-b-news
 ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -302,8 +303,9 @@ to set-characteristics
   set reiterate-counter 0
   set opinion-metric initial-opinion-metric-value
   set is-opinion-b-static false
-  set repetition-bias-towards-a-news 0
-  set repetition-bias-towards-b-news 0
+  ;; set repetition-bias-towards-a-news 0
+  ;; set repetition-bias-towards-b-news 0
+  set opinion-metric-step 0.10
 end
 
 ;; Function to setup the network using the Erdős–Rényi model
@@ -944,6 +946,34 @@ to calculate-global-cascade
 
 end
 
+;; Function used to update the opinion-metric-step (for the confirmation bias)
+to update-opinion-metric-step [agent opinion]
+  ask agent[ 
+    if opinion-metric >= 0.66 [
+      ifelse opinion = "a" [
+        ;; print "------------------------------ a active to opinion a"
+        set opinion-metric-step (opinion-metric * opinion-metric-step) + opinion-metric-step
+      ] [
+        ;; print "------------------------------ a active to opinion b"
+        set opinion-metric-step opinion-metric-step - (opinion-metric * opinion-metric-step)
+      ]
+    ]
+    if opinion-metric <= 0.33 [
+      ifelse opinion = "a" [
+        ;; print "------------------------------ b active to opinion a"
+        set opinion-metric-step opinion-metric-step - (opinion-metric * opinion-metric-step)
+      ] [
+        ;; print "------------------------------ b active to opinion b"
+        set opinion-metric-step (opinion-metric * opinion-metric-step) + opinion-metric-step
+      ]
+    ]
+    if opinion-metric > 0.33 and opinion-metric < 0.66 [
+      ;; print "------------------------------ sono neutro"
+      set opinion-metric-step 0.10
+    ]
+  ]
+end
+
 ;; Function used to know if an agent is about to change opinion based on the opinion metric value. If the opinion metric is between 0.00 and 0.33, the agent
 ;; will support opinion b. If the opinion metric is between 0.34 and 0.65, the agent will remain neutral and lastly if the value is between 0.66 and 1.00, the agent
 ;; will support opinion a.
@@ -952,9 +982,11 @@ to calculate-opinion-metric [agent opinion]
   ask agent [
     if is-opinion-b-static = false [
 
+      update-opinion-metric-step agent opinion
+
       ifelse opinion = "a" [
         ask agent [
-          set opinion-metric opinion-metric + opinion-metric-step - repetition-bias-towards-b-news
+          set opinion-metric opinion-metric + opinion-metric-step
           if opinion-metric > 1 [
             set opinion-metric 1
           ]
@@ -973,8 +1005,7 @@ to calculate-opinion-metric [agent opinion]
         ]
       ][
         ask agent [
-          ;; if the agent is affected by repetetion bias will be more inclined to support opinion a (with a slowdown towards opinion b)
-          set opinion-metric opinion-metric - opinion-metric-step + repetition-bias-towards-a-news
+          set opinion-metric opinion-metric - opinion-metric-step
           if opinion-metric < 0 [
             set opinion-metric 0
           ]
@@ -1587,20 +1618,7 @@ initial-opinion-metric-value
 NIL
 HORIZONTAL
 
-SLIDER
-12
-442
-187
-475
-opinion-metric-step
-opinion-metric-step
-0
-1
-0.1
-0.01
-1
-NIL
-HORIZONTAL
+
 
 BUTTON
 745

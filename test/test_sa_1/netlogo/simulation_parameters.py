@@ -8,12 +8,12 @@ class NetlogoSimulationParameters:
     StaticWeight = 5
     GoWeight = 2
     
-    growth_percentages = [80, 60, 50, 30, 20, 10] # Percentages of network growth
-    growth_ticks = [50, 100, 200, 300, 400, 500] # Ticks necessary to reach the next growth percentage
-    leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
-    leave_ticks = [50, 100, 200, 300, 400, 500] # Ticks necessary to reach the next leave percentage
+    growth_percentages = [10, 15, 14, 26, 17, 10, 10, 16, 14, 5] # Percentages of network growth
+    growth_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] # Ticks necessary to reach the next growth percentage
+    leave_percentages = [2, 3, 3, 5, 2, 2, 3, 3, 4, 2] # Percentages of leaving nodes
+    leave_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]# Ticks necessary to reach the next leave percentage
     repetition_bias_values = [0.05, 0.10, 0.15, 0.20] # Values of bias growth
-    bias_ticks = [20, 40, 70, 100] # Number of consecutive news necessary to reach the next value of bias growth
+    bias_ticks = [30, 50, 70, 100] # Number of consecutive news necessary to reach the next value of bias growth
 
     def setWarningWeight(self, value):
         self.WarningWeight = value
