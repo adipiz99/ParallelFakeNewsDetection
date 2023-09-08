@@ -42,8 +42,8 @@ basic-agents-own [
   opinion-metric                  ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
   opinion-metric-step
   is-opinion-b-static             ;; Boolean that when set to true an agent will always sustain opinion b
-  ;; repetition-bias-towards-a-news  ;; Variable used to quantify the degree of the repetion bias. 
-  ;; repetition-bias-towards-b-news
+  repetition-bias-towards-a-news  ;; Variable used to quantify the degree of the repetion bias. 
+  repetition-bias-towards-b-news
 ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -192,6 +192,11 @@ to-report get-leaving
   report is-leaving-active
 end
 
+;; Function used to get the is-confirmation-bias-active variable value
+to-report get-confirmation-bias
+  report is-confirmation-bias-active
+end
+
 ;; Function used to set the is-rewire-active variable value
 to-report toggle-rewire
   ifelse is-rewire-active = true
@@ -214,6 +219,13 @@ to-report toggle-leaving
   [ set is-leaving-active false ]
   [ set is-leaving-active true ]
   report is-leaving-active
+end
+
+to-report toggle-confirmation-bias
+  ifelse is-confirmation-bias-active = true
+  [ set is-confirmation-bias-active false ]
+  [ set is-confirmation-bias-active true ]
+  report is-confirmation-bias-active
 end
 
 to-report get-agent-ids
@@ -951,24 +963,24 @@ to update-opinion-metric-step [agent opinion]
   ask agent[ 
     if opinion-metric >= 0.66 [
       ifelse opinion = "a" [
-        ;; print "------------------------------ a active to opinion a"
+        print "------------------------------ a active to opinion a"
         set opinion-metric-step (opinion-metric * opinion-metric-step) + opinion-metric-step
       ] [
-        ;; print "------------------------------ a active to opinion b"
+        print "------------------------------ a active to opinion b"
         set opinion-metric-step opinion-metric-step - (opinion-metric * opinion-metric-step)
       ]
     ]
     if opinion-metric <= 0.33 [
       ifelse opinion = "a" [
-        ;; print "------------------------------ b active to opinion a"
+        print "------------------------------ b active to opinion a"
         set opinion-metric-step opinion-metric-step - (opinion-metric * opinion-metric-step)
       ] [
-        ;; print "------------------------------ b active to opinion b"
+        print "------------------------------ b active to opinion b"
         set opinion-metric-step (opinion-metric * opinion-metric-step) + opinion-metric-step
       ]
     ]
     if opinion-metric > 0.33 and opinion-metric < 0.66 [
-      ;; print "------------------------------ sono neutro"
+      print "------------------------------ sono neutro"
       set opinion-metric-step 0.10
     ]
   ]
@@ -982,7 +994,15 @@ to calculate-opinion-metric [agent opinion]
   ask agent [
     if is-opinion-b-static = false [
 
-      update-opinion-metric-step agent opinion
+      print "opinion metric:"
+      show opinion-metric
+      show opinion-metric-step
+
+      if is-confirmation-bias-active = true [
+        update-opinion-metric-step agent opinion
+      ]
+
+      show opinion-metric-step
 
       ifelse opinion = "a" [
         ask agent [
@@ -1701,8 +1721,8 @@ SWITCH
 85
 1059
 118
-is-repetition-bias-active
-is-repetition-bias-active
+is-confirmation-bias-active
+is-confirmation-bias-active
 1
 1
 -1000

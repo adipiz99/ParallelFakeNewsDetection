@@ -8,7 +8,7 @@ class test_sa_1:
     echo_chamber_fraction = 0.20
     opinion_metric_step = 0.10
     nb_nodes = 100
-    path = "test/test_sa_1/test_sa_1_results/"
+    path = "test/test_sa_1/test_sa_1_1_results_confbias/"
     warning = "global"
     node_range_static_b = 0.05
     node_range = 0.10
@@ -176,23 +176,13 @@ class NetlogoCommands:
 
     def remove_agents(self, number):
         self.netlogo.command('remove-agents {}'.format(number))
+    
+    def get_confirmation_bias(self):
+        return self.netlogo.report('get-confirmation-bias')
 
-    def calculate_fraction(values):
-        count = 0
-        for i in range(len(values)):
-            if (values[i]> 0.5):
-                count += 1
-        
-        return count/len(values)
-
-    def calculate_fraction(values):
-        count = 0
-        for i in range(len(values)):
-            if (values[i]> 0.5):
-                count += 1
-        
-        return count/len(values)
-
+    def toggle_confirmation_bias(self):
+        return self.netlogo.report('toggle-confirmation-bias')
+    
     def get_agent_ids(self):
             return self.netlogo.report('get-agent-ids')
         
@@ -215,3 +205,19 @@ class NetlogoCommands:
     
     def get_repetition_b_bias_by_id(self, id):
         return self.netlogo.report('get-repetition-b-bias-by-id {}'.format(id))
+
+def calculate_fraction(values):
+    count = 0
+    for i in range(len(values)):
+        if (values[i]> 0.5):
+            count += 1
+        
+    return count/len(values)
+
+def calculate_fraction(values):
+    count = 0
+    for i in range(len(values)):
+        if (values[i]> 0.5):
+            count += 1
+        
+    return count/len(values)

@@ -177,6 +177,13 @@ class NetlogoCommands:
     def remove_agents(self, number):
         self.netlogo.command('remove-agents {}'.format(number))
     
+    def get_confirmation_bias(self):
+        return self.netlogo.report('get-confirmation-bias')
+
+    def toggle_confirmation_bias(self):
+        return self.netlogo.report('toggle-confirmation-bias')
+    
+
     def get_agent_ids(self):
         return self.netlogo.report('get-agent-ids')
     

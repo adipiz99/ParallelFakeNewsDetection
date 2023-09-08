@@ -51,6 +51,11 @@ leaving = env.netlogo.get_leaving()
 if (not leaving):
     env.netlogo.toggle_leaving()
 
+# Activate confirmation bias inside the network
+confirmationbias = env.netlogo.get_confirmation_bias()
+if (not confirmationbias):
+    env.netlogo.toggle_confirmation_bias()
+
 growth_percentages = [10, 15, 14, 26, 17, 10, 10, 16, 14, 5] # Percentages of network growth
 growth_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] # Ticks necessary to reach the next growth percentage
 leave_percentages = [2, 3, 3, 5, 2, 2, 3, 3, 4, 2] # Percentages of leaving nodes
@@ -64,10 +69,8 @@ env.params.setGrowthTicks(growth_ticks)
 env.params.setLeavePercentages(leave_percentages)
 env.params.setLeaveTicks(leave_ticks)
 netlogoCommands.set_rewire_probability(rewire_probability)
-# end dynamic network params
 # env.params.setRepetitionBiasValues(repetition_bias_values)
 # env.params.setBiasTicks(bias_ticks)
-# end bias params
 
 total_nodes = netlogoCommands.get_total_agents()
 total_ticks = netlogoCommands.get_total_ticks()
@@ -113,7 +116,7 @@ for i in range(len(network_polarization)):
                     obs = env.step(0)
             global_cascades.append(netlogoCommands.get_global_cascade_fraction())
 
-        new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [netlogoCommands.calculate_fraction(global_cascades)]})
+        new_df = pd.DataFrame({"Treshold": [tresholds[j]], "Network Polarization": [network_polarization[i]], 'Virality': [calculate_fraction(global_cascades)]})
         df = pd.concat([df, new_df], ignore_index=True)
 
 total_time = (time.time() - start_time)/60
