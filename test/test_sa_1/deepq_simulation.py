@@ -123,14 +123,13 @@ class DeepQLearning:
                 
                 if steps_to_update_target_model % 4 == 0 or terminated:
                     self.train(env, replay_memory, self.model, self.target_model, terminated)
-                    env.rewire()
-                    env.grow()
-                    env.leave()
 
                 observation = new_observation
                 total_training_rewards += reward
 
-                
+                env.rewire()
+                env.grow()
+                env.leave()
 
                 if terminated:
                     print('Total training rewards: {} after n steps = {} with final reward = {}'.format(total_training_rewards, episode, reward))

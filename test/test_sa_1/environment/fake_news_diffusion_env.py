@@ -227,12 +227,14 @@ class FakeNewsSimulation(Env):
             if index >= len(growth_percentages): # if the index is out of bounds, set it to the last index
                 index = len(growth_percentages) - 1
 
-            growth_percentage = growth_percentages[index]
-            basic_agents = self.netlogo.get_total_agents()
-            agents_to_add = int((basic_agents/100)*growth_percentage)
+            if(tick == growth_ticks[index]):
+                #print("grow attivata")
+                growth_percentage = growth_percentages[index]
+                basic_agents = self.netlogo.get_total_agents()
+                agents_to_add = int((basic_agents/100)*growth_percentage)
 
-            self.netlogo.add_agents(agents_to_add)
-            return True
+                self.netlogo.add_agents(agents_to_add)
+                return True
         return False
     
     def leave(self):
@@ -257,10 +259,12 @@ class FakeNewsSimulation(Env):
             if index >= len(leave_percentages): # if the index is out of bounds, set it to the last index
                 index = len(leave_percentages) - 1
 
-            leave_percentage = leave_percentages[index]
-            basic_agents = self.netlogo.get_total_agents()
-            agents_to_remove = int((basic_agents/100)*leave_percentage)
+            if(tick == leave_ticks[index]):
+                #print("leave attivata")
+                leave_percentage = leave_percentages[index]
+                basic_agents = self.netlogo.get_total_agents()
+                agents_to_remove = int((basic_agents/100)*leave_percentage)
 
-            self.netlogo.remove_agents(agents_to_remove)
-            return True
+                self.netlogo.remove_agents(agents_to_remove)
+                return True
         return False

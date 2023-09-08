@@ -20,7 +20,7 @@ netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)#, netlogo_
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
-env = FakeNewsSimulation(netlogoCommands)
+env = FakeNewsSimulation(netlogoCommands, rank)
 
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
 netlogoCommands.set_opinion_polarization(test_sa_2.opinion_polarization)
@@ -48,10 +48,10 @@ leaving = env.leave()
 if (not leaving):
     env.netlogo.toggle_leaving()
 
-growth_percentages = [80, 60, 50, 30, 20, 10] # Percentages of network growth
-growth_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next growth percentage
-leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
-leave_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next leave percentage
+growth_percentages = [10, 15, 14, 26, 17, 10, 10, 16, 14, 5] # Percentages of network growth
+growth_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] # Ticks necessary to reach the next growth percentage
+leave_percentages = [2, 3, 3, 5, 2, 2, 3, 3, 4, 2] # Percentages of leaving nodes
+leave_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]# Ticks necessary to reach the next leave percentage
 rewire_probability = 0.3 # Probability of rewiring a node
 
 env.params.setGrowthPercentages(growth_percentages)
