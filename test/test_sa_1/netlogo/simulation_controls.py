@@ -78,8 +78,8 @@ class NetlogoCommands:
     def set_initial_opinion_metric_value(self, value):
         self.netlogo.command("set initial-opinion-metric-value {}".format(value))
     
-    def set_opinion_metric_step(self, value):
-        self.netlogo.command("set opinion-metric-step {}".format(value))
+    # def set_opinion_metric_step(self, value):
+    #    self.netlogo.command("set opinion-metric-step {}".format(value))
 
     def set_warning(self, value):
         if (value == "global"):
