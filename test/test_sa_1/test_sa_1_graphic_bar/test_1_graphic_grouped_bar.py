@@ -8,14 +8,14 @@ colorarray=['black','dimgrey','grey','darkgrey','lightgrey','darkslategrey','lig
 
 tresholds = [0.270, 0.342, 0.414]
 
-path = "test/test_1/test_1_results_static/"
+path = "test/test_1/test_1_results/"
 df1 = pd.read_csv(path + 'test_1_1.csv')
 df2 = pd.read_csv(path + 'test_1_2.csv')
 df3 = pd.read_csv(path + 'test_1_3.csv')
 df4 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_1_results/"
+path = "test/test_sa_1/test_sa_1_1_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -31,7 +31,7 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_5 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_2_results/"
+path = "test/test_sa_1/test_sa_1_2_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -47,7 +47,7 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_4 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_3_results/"
+path = "test/test_sa_1/test_sa_1_3_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -63,13 +63,24 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_2 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
+path = "test/test_sa_1/test_sa_1_results/"
+df1 = pd.read_csv(path + 'test_1.csv')
+df2 = pd.read_csv(path + 'test_2.csv')
+df3 = pd.read_csv(path + 'test_3.csv')
+df4 = pd.read_csv(path + 'test_4.csv')
+df5 = pd.read_csv(path + 'test_5.csv')
+df6 = pd.read_csv(path + 'test_6.csv')
+df7 = pd.read_csv(path + 'test_7.csv')
+df8 = pd.read_csv(path + 'test_8.csv')
+df_3 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df8], ignore_index=True)
+
 
 
 scores_no_sa = []
 scores_sa_5 = []
 scores_sa_4 = []
 scores_sa_2 = []
-df = [df_no_sa,df_5, df_4, df_2]
+df = [df_no_sa,df_5, df_4, df_2, df_3]
 
 
 for i in range(len(tresholds)):
@@ -101,7 +112,9 @@ plt.rcParams.update({'font.size': 15})
 rects1 = ax.bar(r1, scores_no_sa, width, label='No Sa', color='black', hatch='//')
 rects2 = ax.bar(r2, scores_sa_5, width, label='sa delay 5', color='dimgrey', hatch='x', zorder=0)
 rects3 = ax.bar(r3, scores_sa_4, width, label='sa delay 4', color='grey', hatch='xx')
-rects4 = ax.bar(r4, scores_sa_2, width, label = "sa delay 2", color="darkgrey", hatch='/'), 
+rects4 = ax.bar(r4, scores_sa_2, width, label = "sa delay 2", color="darkgrey", hatch='/'),
+rects5 = ax.bar(r4, scores_sa_2, width, label = "dynamic network", color="blue", hatch='/'),
+
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--')
 plt.ylim([0,0.9])
