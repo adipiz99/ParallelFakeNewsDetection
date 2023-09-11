@@ -8,7 +8,7 @@ colorarray=['black','dimgrey','grey','darkgrey','lightgrey','darkslategrey','lig
 
 tresholds = [0.270, 0.342, 0.414]
 
-path = "test/test_1/test_1_results/"
+path = "test/test_1/test_1_results_static/"
 df1 = pd.read_csv(path + 'test_1_1.csv')
 df2 = pd.read_csv(path + 'test_1_2.csv')
 df3 = pd.read_csv(path + 'test_1_3.csv')
