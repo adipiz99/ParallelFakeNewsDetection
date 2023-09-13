@@ -71,7 +71,7 @@ r4 = [x + width+0.03 for x in r3]
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
 
-rects1 = ax.bar(r1, scores_no_sa, width, label='No Sa', color='black', hatch='//')
+rects1 = ax.bar(r1, scores_no_sa, width, label='No Sa, No Bias', color='black', hatch='//')
 rects2 = ax.bar(r2, scores_sa_5, width, label='sa delay 5', color='purple', hatch='x', zorder=0)
 rects3 = ax.bar(r3, scores_sa_4, width, label='sa delay 4', color='magenta', hatch='xx')
 rects4 = ax.bar(r4, scores_sa_2, width, label = "sa delay 2", color="pink", hatch='/'),
@@ -92,7 +92,7 @@ ax.set_xlabel("\u03B8 (threshold)", fontsize = 15)
 colors = ['black']
 lines = [Line2D([0], [0], color=c, linewidth=1, linestyle='--') for c in colors]
 labels = ['Single-view']
-ax.legend([rects1,rects2,rects3,rects4, linea],('No sa','sa delay 5','sa delay 4','sa delay 2','Virality 0.5'))
+ax.legend([rects1,rects2,rects3,rects4, linea],('No sa, no bias','sa delay 5','sa delay 4','sa delay 2','Virality 0.5'))
 
 fig.set_figheight(6)
 fig.set_figwidth(12)
