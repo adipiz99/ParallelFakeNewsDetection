@@ -2,13 +2,13 @@ import matplotlib.pyplot as plt
 from pathlib import Path 
 import pandas as pd
 
-colorarray=['black','dimgrey','grey','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
+colorarray=['purple','magenta','pink','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
 
 node_range = [0.10, 0.20, 0.30]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_4/test_sa_4_results/"
+path = "test/test_sa_4/test_sa_4_3_results_confbias/"
 #get number of files in path
 pathlist = Path(path).glob('**/*.csv')
 pathlist = sorted(pathlist)
@@ -49,7 +49,7 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title="Node Range")
 plt.grid(visible=True,linewidth=0.2)
 
-filepath = Path(path + 'test_sa_4_T342.png')  
+filepath = Path(path + 'test_sa_4_T414.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

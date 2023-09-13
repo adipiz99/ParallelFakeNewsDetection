@@ -15,42 +15,35 @@ df2 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2], ignore_index=True)
 
 
-path = "test/test_sa_5/test_sa_5_1_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
+path = "test/test_sa_5/test_sa_5_1_results_confbias/"
+pathlist1 = Path(path).glob('**/*.csv')
+pathlist1 = sorted(pathlist1)
+df_array1 = []
+for p in pathlist1:
+    df_array1.append(pd.read_csv(str(p)))
+df_10 = pd.concat(df_array1, ignore_index=True)
 
-df_10 = pd.concat([df1, df2, df3], ignore_index=True)
+path = "test/test_sa_5/test_sa_5_2_results_confbias/"
+pathlist2 = Path(path).glob('**/*.csv')
+pathlist2 = sorted(pathlist2)
+df_array2 = []
+for p in pathlist2:
+    df_array2.append(pd.read_csv(str(p)))
+df_20 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_5/test_sa_5_2_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-
-df_20 = pd.concat([df1, df2, df3], ignore_index=True)
-
-path = "test/test_sa_5/test_sa_5_3_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-df_30 = pd.concat([df1, df2, df3], ignore_index=True)
-
-path = "test/test_sa_5/test_sa_5_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-df4 = pd.read_csv(path + 'test_4.csv')
-df5 = pd.read_csv(path + 'test_5.csv')
-df6 = pd.read_csv(path + 'test_6.csv')
-df_31 = pd.concat([df1, df2, df3, df4, df5, df6], ignore_index=True)
+path = "test/test_sa_5/test_sa_5_3_results_confbias/"
+pathlist3 = Path(path).glob('**/*.csv')
+pathlist3 = sorted(pathlist3)
+df_array3 = []
+for p in pathlist3:
+    df_array3.append(pd.read_csv(str(p)))
+df_30 = pd.concat(df_array3, ignore_index=True)
 
 scores_no_sa = []
 scores_sa_10 = []
 scores_sa_20 = []
 scores_sa_30 = []
-scores_dyn = []
-df = [df_no_sa, df_10, df_20, df_30, df_31]
-
+df = [df_no_sa, df_10, df_20, df_30]
 
 for i in range(len(tresholds)):
     for j in range(len(df)):
@@ -64,34 +57,29 @@ for i in range(len(tresholds)):
             scores_sa_10.append(y)
         elif (j == 2):
             scores_sa_20.append(y)
-        elif (j == 3):
+        else:
             scores_sa_30.append(y)
-        elif (j == 4):
-            scores_dyn.append(y)
 
 print(scores_no_sa)
 print(scores_sa_10)
 print(scores_sa_20)
 print(scores_sa_30)
-print(scores_dyn)
 
 x = np.arange(len(tresholds))  # the label locations
-width = 0.1  # the width of the bars
+width = 0.2  # the width of the bars
 
 r1 = x
 r2 = [x + width+0.03 for x in r1]
 r3 = [x + width+0.03 for x in r2]
 r4 = [x + width+0.03 for x in r3]
-r5 = [x + width+0.03 for x in r4]
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
 
-rects1 = ax.bar(r1, scores_no_sa, width, label='No sa', color='black', hatch='//')
-rects2 = ax.bar(r2, scores_sa_10, width, label='sa WI = 0.2, WIN = 0.30', color='dimgrey', hatch='x', zorder=0)
-rects3 = ax.bar(r3, scores_sa_20, width, label='sa WI = 0.1, WIN = 0.50', color='grey', hatch='xx')
-rects4 = ax.bar(r4, scores_sa_30, width, label = "sa WI = 0.2, WIN = 0.50", color="darkgrey", hatch='/'), 
-rects5 = ax.bar(r5, scores_dyn, width, label = "dynamic", color="blue", hatch='o'), 
+rects1 = ax.bar(r1, scores_no_sa, width, label='No sa, no bias', color='black', hatch='//')
+rects2 = ax.bar(r2, scores_sa_10, width, label='sa WI = 0.2, WIN = 0.30', color='purple', hatch='x', zorder=0)
+rects3 = ax.bar(r3, scores_sa_20, width, label='sa WI = 0.1, WIN = 0.50', color='magenta', hatch='xx')
+rects4 = ax.bar(r4, scores_sa_30, width, label = "sa WI = 0.2, WIN = 0.50", color="pink", hatch='/'), 
 
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--', label = "Virality 0.5")
@@ -114,7 +102,7 @@ fig.set_figheight(6)
 fig.set_figwidth(12)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_5/test_sa_5_graphic_bar/test_sa_wi_win_difference.png')  
+filepath = Path('test/test_sa_5/test_sa_5_graphic_bar/test_sa_bias_wi_win_difference.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

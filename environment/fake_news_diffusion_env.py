@@ -57,6 +57,10 @@ class FakeNewsSimulation(Env):
         leaving = self.netlogo.get_leaving()
         if (not leaving):
             self.netlogo.toggle_leaving()
+        
+        confirmationbias = self.netlogo.get_confirmation_bias()
+        if (not confirmationbias):
+            self.netlogo.toggle_confirmation_bias()
 
         self.global_cascade = self.netlogo.get_global_cascade_fraction()
         self.most_influent_b_nodes = self.netlogo.get_most_influent_a_nodes(self.node_span, self.criteria)
