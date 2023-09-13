@@ -80,6 +80,7 @@ scores_no_sa = []
 scores_sa_5 = []
 scores_sa_4 = []
 scores_sa_2 = []
+scores_dyn = []
 df = [df_no_sa,df_5, df_4, df_2, df_3]
 
 
@@ -95,16 +96,20 @@ for i in range(len(tresholds)):
             scores_sa_5.append(y)
         elif(j == 2):
             scores_sa_4.append(y)
-        else:
+        elif(j == 3):
             scores_sa_2.append(y)
+        else:
+            scores_dyn.append(y)
+            
             
 x = np.arange(len(tresholds))  # the label locations
-width = 0.2  # the width of the bars
+width = 0.15  # the width of the bars
 
 r1 = x
-r2 = [x + width+0.03 for x in r1]
-r3 = [x + width+0.03 for x in r2]
-r4 = [x + width+0.03 for x in r3]
+r2 = [x + width+0.02 for x in r1]
+r3 = [x + width+0.02 for x in r2]
+r4 = [x + width+0.02 for x in r3]
+r5 = [x + width+0.02 for x in r4]
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
@@ -113,7 +118,7 @@ rects1 = ax.bar(r1, scores_no_sa, width, label='No Sa', color='black', hatch='//
 rects2 = ax.bar(r2, scores_sa_5, width, label='sa delay 5', color='dimgrey', hatch='x', zorder=0)
 rects3 = ax.bar(r3, scores_sa_4, width, label='sa delay 4', color='grey', hatch='xx')
 rects4 = ax.bar(r4, scores_sa_2, width, label = "sa delay 2", color="darkgrey", hatch='/'),
-rects5 = ax.bar(r4, scores_sa_2, width, label = "dynamic network", color="blue", hatch='/'),
+rects5 = ax.bar(r5, scores_dyn, width, label = "dynamic network", color="blue", hatch='o'),
 
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--')
@@ -122,7 +127,7 @@ ax.yaxis.set_tick_params(labelsize=15)
 # Add some text for labels, title and custom x-axis tick labels, etc.
 ax.set_ylabel('Average Virality', fontsize = 15)
 #ax.set_title('Comparison between the best results', fontweight='bold')
-width += (0.14)
+width += (0.25)
 ax.set_xticks(x+width)
 #x_labels = ["\u03B8 0.270", "\u03B8 0.342", "\u03B8 0"]
 ax.set_xticklabels(tresholds,rotation=45, fontsize = 15)
@@ -131,10 +136,10 @@ ax.set_xlabel("\u03B8 (threshold)", fontsize = 15)
 colors = ['black']
 lines = [Line2D([0], [0], color=c, linewidth=1, linestyle='--') for c in colors]
 labels = ['Single-view']
-ax.legend([rects1,rects2,rects3,rects4,linea],('No sa','sa delay 5','sa delay 4','sa delay 2', 'Virality 0.5'))
+ax.legend([rects1,rects2,rects3,rects4, rects5, linea],('No sa','sa delay 5','sa delay 4','sa delay 2', 'dynamic', 'Virality 0.5'))
 
-fig.set_figheight(6)
-fig.set_figwidth(12)
+fig.set_figheight(5)
+fig.set_figwidth(8)
 
 fig.tight_layout()
 

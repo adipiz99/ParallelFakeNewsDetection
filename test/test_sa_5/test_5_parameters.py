@@ -8,15 +8,15 @@ class test_sa_5:
     echo_chamber_fraction = 0.20
     opinion_metric_step = 0.10
     nb_nodes = 100
-    path = "test/test_sa_5/test_sa_5_results_10_30/"
+    path = "test/test_sa_5/test_sa_5_3_results_confbias/"
     warning = "global"
     node_range_static_b = 0.05
     node_span = 10
     node_range = 0.10
     choose_method = "degree"
     #0.20/0.30, 0.10/0.50, 0.20/0.50, 0.10/0.30
-    warning_impact = 0.10
-    warning_impact_neutral = 0.30
+    warning_impact = 0.20
+    warning_impact_neutral = 0.50
     sa_delay = 2
 
     def set_dynamic_network_polarization(self, n_proc):
@@ -81,8 +81,8 @@ class NetlogoCommands:
     def set_initial_opinion_metric_value(self, value):
         self.netlogo.command("set initial-opinion-metric-value {}".format(value))
     
-    def set_opinion_metric_step(self, value):
-        self.netlogo.command("set opinion-metric-step {}".format(value))
+    # def set_opinion_metric_step(self, value):
+    #    self.netlogo.command("set opinion-metric-step {}".format(value))
 
     def set_warning(self, value):
         if (value == "global"):
@@ -178,6 +178,12 @@ class NetlogoCommands:
 
     def remove_agents(self, number):
         self.netlogo.command('remove-agents {}'.format(number))
+
+    def get_confirmation_bias(self):
+        return self.netlogo.report('get-confirmation-bias')
+
+    def toggle_confirmation_bias(self):
+        return self.netlogo.report('toggle-confirmation-bias')
 
 def calculate_fraction(values):
     count = 0

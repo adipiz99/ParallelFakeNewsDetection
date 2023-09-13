@@ -21,13 +21,13 @@ netlogo = pyNetLogo.NetLogoLink(gui=False, netlogo_home=netlogo_path)
 modelfile = os.path.abspath('netlogo/FakeNewsSimulation.nlogo')
 netlogo.load_model(modelfile)
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
-env = FakeNewsSimulation(netlogoCommands)
+env = FakeNewsSimulation(netlogoCommands, rank)
 
 netlogoCommands = NetlogoCommands(netlogo, modelfile)
 netlogoCommands.set_opinion_polarization(test_sa_5.opinion_polarization)
 netlogoCommands.set_initial_opinion_metric_value(0.5)
 netlogoCommands.set_echo_chamber_fraction(test_sa_5.echo_chamber_fraction)
-netlogoCommands.set_opinion_metric_step(test_sa_5.opinion_metric_step)
+# netlogoCommands.set_opinion_metric_step(test_sa_5.opinion_metric_step)
 netlogoCommands.set_nodes(test_sa_5.nb_nodes)
 env.set_most_influent_a_nodes_criteria(10, test_sa_5.choose_method)
 netlogoCommands.set_warning(test_sa_5.warning)
@@ -37,22 +37,27 @@ netlogoCommands.set_warning_impact(test_sa_5.warning_impact)
 netlogoCommands.set_warning_impact_neutral(test_sa_5.warning_impact_neutral)
 
 # Setup dynamic network params
-rewiring = env.rewire()
+rewiring = env.netlogo.get_rewire()
 if (not rewiring):
     env.netlogo.toggle_rewire()
 
-growing = env.grow()
+growing = env.netlogo.get_growth()
 if (not growing):
     env.netlogo.toggle_growth()
 
-leaving = env.leave()
+leaving = env.netlogo.get_leaving()
 if (not leaving):
     env.netlogo.toggle_leaving()
 
-growth_percentages = [80, 60, 50, 30, 20, 10] # Percentages of network growth
-growth_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next growth percentage
-leave_percentages = [5, 10, 15, 20, 25, 30] # Percentages of leaving nodes
-leave_ticks = [20, 30, 50, 70, 90, 100] # Ticks necessary to reach the next leave percentage
+# Activate confirmation bias inside the network
+confirmationbias = env.netlogo.get_confirmation_bias()
+if (not confirmationbias):
+    env.netlogo.toggle_confirmation_bias()
+
+growth_percentages = [10, 15, 14, 26, 17, 10, 10, 16, 14, 5] # Percentages of network growth
+growth_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] # Ticks necessary to reach the next growth percentage
+leave_percentages = [2, 3, 3, 5, 2, 2, 3, 3, 4, 2] # Percentages of leaving nodes
+leave_ticks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]# Ticks necessary to reach the next leave percentage
 rewire_probability = 0.3 # Probability of rewiring a node
 
 env.params.setGrowthPercentages(growth_percentages)
@@ -60,7 +65,6 @@ env.params.setGrowthTicks(growth_ticks)
 env.params.setLeavePercentages(leave_percentages)
 env.params.setLeaveTicks(leave_ticks)
 netlogoCommands.set_rewire_probability(rewire_probability)
-
 # end dynamic network params
 
 total_nodes = netlogoCommands.get_total_agents()

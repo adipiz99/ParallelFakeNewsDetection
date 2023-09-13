@@ -1,6 +1,7 @@
 from gymnasium import Env, spaces
 import numpy as np
 import random
+import copy
 import pandas as pd
 from environment.environment_utils import EnvironmentUtils
 from netlogo.simulation_controls import NetlogoCommands
@@ -10,14 +11,17 @@ class FakeNewsSimulation(Env):
     netlogo = 0
     environment_utils = 0
     params = NetlogoSimulationParameters()
+    tick_count_started = False
+    proc_id = 0
 
-    def __init__(self, netlogoCommands : NetlogoCommands):
+    def __init__(self, netlogoCommands : NetlogoCommands, process_id):
         super(FakeNewsSimulation, self).__init__()
 
         print("Initialinzing the environment...")
         
         self.netlogo = netlogoCommands
         self.environment_utils = EnvironmentUtils()
+        self.proc_id = process_id
 
         low = np.array([0.0, 0.0, 0.0])
         high = np.array([1.0, 1.0, 1.0])
@@ -108,13 +112,13 @@ class FakeNewsSimulation(Env):
     def rewire(self):
         is_rewiring_active = self.netlogo.get_rewire()
         rewire_prob = self.netlogo.get_rewire_probability()
-        self.netlogo.export_network("world.csv")
+        self.netlogo.export_network("world_{}.csv".format(self.proc_id))
 
         if(not is_rewiring_active):
             return False
 
         # Input
-        data_file = "./netlogo/world.csv"
+        data_file = "./netlogo/world_{}.csv".format(self.proc_id)
 
         # Delimiter
         data_file_delimiter = ','
@@ -196,16 +200,21 @@ class FakeNewsSimulation(Env):
 
         #remove header
         df1 = df.tail(-1)
-        df1.to_csv("./netlogo/world.csv", index=False, header=False)
+        df1.to_csv("./netlogo/world_{}.csv".format(self.proc_id), index=False, header=False)
 
-        self.netlogo.import_network("world.csv")
+        self.netlogo.import_network("world_{}.csv".format(self.proc_id))
         return True
 
     def grow(self):
         is_network_growing = self.netlogo.get_growth()
 
         if(is_network_growing):
-            tick = self.netlogo.get_current_tick()
+            if(self.tick_count_started):
+                tick = self.netlogo.get_current_tick()
+            else:  
+                self.tick_count_started = True
+                tick = 0
+        
             growth_ticks = self.params.getGrowthTicks()
             growth_percentages = self.params.getGrowthPercentages()
             index = 0
@@ -219,19 +228,25 @@ class FakeNewsSimulation(Env):
             if index >= len(growth_percentages): # if the index is out of bounds, set it to the last index
                 index = len(growth_percentages) - 1
 
-            growth_percentage = growth_percentages[index]
-            basic_agents = self.netlogo.get_total_agents()
-            agents_to_add = int((basic_agents/100)*growth_percentage)
+            if(tick == growth_ticks[index]):
+                # print("grow attivata")
+                growth_percentage = growth_percentages[index]
+                basic_agents = self.netlogo.get_total_agents()
+                agents_to_add = int((basic_agents/100)*growth_percentage)
 
-            self.netlogo.add_agents(agents_to_add)
-            return True
+                self.netlogo.add_agents(agents_to_add)
+                return True
         return False
     
     def leave(self):
         is_nodes_leaving = self.netlogo.get_leaving()
 
         if(is_nodes_leaving):
-            tick = self.netlogo.get_current_tick()
+            if(self.tick_count_started):
+                tick = self.netlogo.get_current_tick()
+            else:  
+                self.tick_count_started = True
+                tick = 0
             leave_ticks = self.params.getLeaveTicks()
             leave_percentages = self.params.getLeavePercentages()
             index = 0
@@ -245,10 +260,12 @@ class FakeNewsSimulation(Env):
             if index >= len(leave_percentages): # if the index is out of bounds, set it to the last index
                 index = len(leave_percentages) - 1
 
-            leave_percentage = leave_percentages[index]
-            basic_agents = self.netlogo.get_total_agents()
-            agents_to_remove = int((basic_agents/100)*leave_percentage)
+            if(tick == leave_ticks[index]):
+                # print("leave attivata")
+                leave_percentage = leave_percentages[index]
+                basic_agents = self.netlogo.get_total_agents()
+                agents_to_remove = int((basic_agents/100)*leave_percentage)
 
-            self.netlogo.remove_agents(agents_to_remove)
-            return True
+                self.netlogo.remove_agents(agents_to_remove)
+                return True
         return False

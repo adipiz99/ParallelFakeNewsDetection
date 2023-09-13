@@ -17,7 +17,7 @@ df4 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
 
-path = "test/test_sa_3/test_sa_3_1_results/"
+path = "test/test_sa_3/test_sa_3_1_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -33,7 +33,7 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_5 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
-path = "test/test_sa_3/test_sa_3_2_results/"
+path = "test/test_sa_3/test_sa_3_2_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -49,7 +49,7 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_10 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
-path = "test/test_sa_3/test_sa_3_3_results/"
+path = "test/test_sa_3/test_sa_3_3_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -65,12 +65,21 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_20 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
+path = "test/test_sa_3/test_sa_3_results/"
+df1 = pd.read_csv(path + 'test_1.csv')
+df2 = pd.read_csv(path + 'test_2.csv')
+df3 = pd.read_csv(path + 'test_3.csv')
+df4 = pd.read_csv(path + 'test_4.csv')
+df5 = pd.read_csv(path + 'test_5.csv')
+df6 = pd.read_csv(path + 'test_6.csv')
+df_21 = pd.concat([df1, df2, df3, df4, df5, df6], ignore_index=True)
 
 scores_no_sa = []
 scores_sa_5 = []
 scores_sa_10 = []
 scores_sa_20 = []
-df = [df_no_sa, df_5, df_10, df_20]
+scores_dyn = []
+df = [df_no_sa, df_5, df_10, df_20, df_21]
 
 for i in range(len(tresholds)):
     for j in range(len(df)):
@@ -89,6 +98,8 @@ for i in range(len(tresholds)):
             scores_sa_10.append(y)
         elif (j == 3):
             scores_sa_20.append(y)
+        elif (j == 4):
+            scores_dyn.append(y)
 
 
 x = np.arange(len(tresholds))  # the label locations
@@ -98,6 +109,7 @@ r1 = x
 r2 = [x + width+0.03 for x in r1]
 r3 = [x + width+0.03 for x in r2]
 r4 = [x + width+0.03 for x in r3]
+r5 = [x + width+0.03 for x in r4]
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
@@ -106,6 +118,8 @@ rects1 = ax.bar(r1, scores_no_sa, width, label='No sa', color='black', hatch='//
 rects2 = ax.bar(r2, scores_sa_5, width, label='sa nrsb = 0.5', color='dimgrey', hatch='x', zorder=0)
 rects3 = ax.bar(r3, scores_sa_10, width, label='sa nrsb = 0.10', color='grey', hatch='xx')
 rects4 = ax.bar(r4, scores_sa_20, width, label = "sa nrsb = 0.20", color="darkgrey", hatch='/'), 
+rects5 = ax.bar(r4, scores_dyn, width, label = "dynamic", color="blue", hatch='o'), 
+
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--')
 plt.ylim([0,0.9])

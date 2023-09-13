@@ -29,7 +29,7 @@ df3 = pd.read_csv(path + 'test_3_3.csv')
 df4 = pd.read_csv(path + 'test_3_4.csv')
 df_no_sa_27 = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_3_results/"
+path = "test/test_sa_1/test_sa_1_3_results_static/"
 df1 = pd.read_csv(path + 'test_1.csv')
 df2 = pd.read_csv(path + 'test_2.csv')
 df3 = pd.read_csv(path + 'test_3.csv')
@@ -77,6 +77,15 @@ df12 = pd.read_csv(path + 'test_12.csv')
 df13 = pd.read_csv(path + 'test_13.csv')
 df_27 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
 
+path = "test/test_sa_2/test_sa_2_results/"
+df1 = pd.read_csv(path + 'test_1.csv')
+df2 = pd.read_csv(path + 'test_2.csv')
+df3 = pd.read_csv(path + 'test_3.csv')
+df4 = pd.read_csv(path + 'test_4.csv')
+df5 = pd.read_csv(path + 'test_5.csv')
+df6 = pd.read_csv(path + 'test_6.csv')
+df_28 = pd.concat([df1, df2, df3, df4, df5, df6], ignore_index=True)
+
 
 
 
@@ -86,7 +95,8 @@ scores_no_sa_27 = []
 scores_sa_0 = []
 scores_sa_15 = []
 scores_sa_27 = []
-df = [df_no_sa_0, df_no_sa_15, df_no_sa_27, df_0, df_15, df_27]
+scores_dyn = []
+df = [df_no_sa_0, df_no_sa_15, df_no_sa_27, df_0, df_15, df_27, df_28]
 
 
 for i in range(len(tresholds)):
@@ -107,6 +117,8 @@ for i in range(len(tresholds)):
             scores_sa_15.append(y)
         elif(j == 5):
             scores_sa_27.append(y)
+        elif(j == 6):
+            scores_dyn.append(y)
 
 x = np.arange(len(tresholds))  # the label locations
 width = 0.1  # the width of the bars
@@ -117,6 +129,7 @@ r3 = [x + width+0.03 for x in r2]
 r4 = [x + width+0.03 for x in r3]
 r5 = [x + width+0.03 for x in r4]
 r6 = [x + width+0.03 for x in r5]
+r7 = [x + width+0.03 for x in r6]
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 10})
@@ -127,6 +140,7 @@ rects3 = ax.bar(r3, scores_no_sa_15, width, label='No sa PO = 0.15', color='grey
 rects4 = ax.bar(r4, scores_sa_15, width, label = "sa PO = 0.15", color="darkgrey", hatch='/'), 
 rects5 = ax.bar(r5, scores_no_sa_27, width, label = "No sa PO = 0.27", color='darkslategrey', hatch='*'), 
 rects6 = ax.bar(r6, scores_sa_27, width, label = "sa PO = 0.27", color='lightslategrey', hatch='+'), 
+rects7 = ax.bar(r7, scores_dyn, width, label = "dynamic", color='blue', hatch='o'), 
 
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--', label = "Virality 0.5")

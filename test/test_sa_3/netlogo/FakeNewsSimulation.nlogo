@@ -19,28 +19,31 @@ globals [
 ]
 
 basic-agents-own [
-  activation-treshold        ;; Determines how an agent is susceptible to change opinion
-  betweenness                ;; Network analysis parameter
-  eigenvector                ;;
-  closeness                  ;;
-  clustering                 ;;
-  community                  ;;
-  page-rank                  ;;
-  in-degree                  ;;
-  out-degree                 ;;
-  degree                     ;;
-  is-a-active                ;; True if the agent support the fake news
-  is-b-active                ;; True if the agent does not support the fake news
-  is-in-cluster              ;; True if the agent is located in the echo chamber
-  is-active-next             ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion a
-  is-inactive-next           ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion b
-  warning                    ;; When this variable is set to true, the agent is warned that the opinion a is a fake news
-  received-a-news-counter    ;; Counter of opinion a news received
-  received-b-news-counter    ;; Counter of opinion b news received
-  reiterate                  ;; When this variable is set to true, the agent will receive more opinion b news so that is more likely that he will change his opinion from a to b
-  reiterate-counter          ;; Counter needed to determine whether or not the agent will reiterate his opinion
-  opinion-metric             ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
-  is-opinion-b-static        ;; Boolean that when set to true an agent will always sustain opinion b
+  activation-treshold             ;; Determines how an agent is susceptible to change opinion
+  betweenness                     ;; Network analysis parameter
+  eigenvector                     ;;
+  closeness                       ;;
+  clustering                      ;;
+  community                       ;;
+  page-rank                       ;;
+  in-degree                       ;;
+  out-degree                      ;;
+  degree                          ;;
+  is-a-active                     ;; True if the agent support the fake news
+  is-b-active                     ;; True if the agent does not support the fake news
+  is-in-cluster                   ;; True if the agent is located in the echo chamber
+  is-active-next                  ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion a
+  is-inactive-next                ;; Ausiliary variable used to delay the change of opinion of an agent during the simulation. If true the agent will support the opinion b
+  warning                         ;; When this variable is set to true, the agent is warned that the opinion a is a fake news
+  received-a-news-counter         ;; Counter of opinion a news received
+  received-b-news-counter         ;; Counter of opinion b news received
+  reiterate                       ;; When this variable is set to true, the agent will receive more opinion b news so that is more likely that he will change his opinion from a to b
+  reiterate-counter               ;; Counter needed to determine whether or not the agent will reiterate his opinion
+  opinion-metric                  ;; Variable used to know when an agent is about to change opinion. The values are included between 0.00 and 1.00
+  opinion-metric-step
+  is-opinion-b-static             ;; Boolean that when set to true an agent will always sustain opinion b
+  repetition-bias-towards-a-news  ;; Variable used to quantify the degree of the repetion bias. 
+  repetition-bias-towards-b-news
 ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -189,6 +192,11 @@ to-report get-leaving
   report is-leaving-active
 end
 
+;; Function used to get the is-confirmation-bias-active variable value
+to-report get-confirmation-bias
+  report is-confirmation-bias-active
+end
+
 ;; Function used to set the is-rewire-active variable value
 to-report toggle-rewire
   ifelse is-rewire-active = true
@@ -212,6 +220,34 @@ to-report toggle-leaving
   [ set is-leaving-active true ]
   report is-leaving-active
 end
+
+to-report toggle-confirmation-bias
+  ifelse is-confirmation-bias-active = true
+  [ set is-confirmation-bias-active false ]
+  [ set is-confirmation-bias-active true ]
+  report is-confirmation-bias-active
+end
+
+to-report get-agent-ids
+  report [who] of basic-agents
+end
+
+to-report get-a-counter-by-id [target-id]
+  report [received-a-news-counter] of basic-agents with [who = target-id]
+end
+
+to-report get-b-counter-by-id [target-id]
+  report [received-b-news-counter] of basic-agents with [who = target-id]
+end
+
+to-report get-repetition-a-bias-by-id [target-id]
+  report [repetition-bias-towards-a-news] of basic-agents with [who = target-id]
+end
+
+to-report get-repetition-b-bias-by-id [target-id]
+  report [repetition-bias-towards-b-news] of basic-agents with [who = target-id]
+end
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Layouts
@@ -279,6 +315,9 @@ to set-characteristics
   set reiterate-counter 0
   set opinion-metric initial-opinion-metric-value
   set is-opinion-b-static false
+  ;; set repetition-bias-towards-a-news 0
+  ;; set repetition-bias-towards-b-news 0
+  set opinion-metric-step 0.10
 end
 
 ;; Function to setup the network using the Erdős–Rényi model
@@ -919,6 +958,34 @@ to calculate-global-cascade
 
 end
 
+;; Function used to update the opinion-metric-step (for the confirmation bias)
+to update-opinion-metric-step [agent opinion]
+  ask agent[ 
+    if opinion-metric >= 0.66 [
+      ifelse opinion = "a" [
+        ;print "------------------------------ a active to opinion a"
+        set opinion-metric-step (opinion-metric * opinion-metric-step) + opinion-metric-step
+      ] [
+        ;print "------------------------------ a active to opinion b"
+        set opinion-metric-step opinion-metric-step - (opinion-metric * opinion-metric-step)
+      ]
+    ]
+    if opinion-metric <= 0.33 [
+      ifelse opinion = "a" [
+        ;print "------------------------------ b active to opinion a"
+        set opinion-metric-step opinion-metric-step - (opinion-metric * opinion-metric-step)
+      ] [
+        ;print "------------------------------ b active to opinion b"
+        set opinion-metric-step (opinion-metric * opinion-metric-step) + opinion-metric-step
+      ]
+    ]
+    if opinion-metric > 0.33 and opinion-metric < 0.66 [
+      ;print "------------------------------ sono neutro"
+      set opinion-metric-step 0.10
+    ]
+  ]
+end
+
 ;; Function used to know if an agent is about to change opinion based on the opinion metric value. If the opinion metric is between 0.00 and 0.33, the agent
 ;; will support opinion b. If the opinion metric is between 0.34 and 0.65, the agent will remain neutral and lastly if the value is between 0.66 and 1.00, the agent
 ;; will support opinion a.
@@ -926,6 +993,16 @@ to calculate-opinion-metric [agent opinion]
 
   ask agent [
     if is-opinion-b-static = false [
+
+      ;print "opinion metric:"
+      ;show opinion-metric
+      ;show opinion-metric-step
+
+      if is-confirmation-bias-active = true [
+        update-opinion-metric-step agent opinion
+      ]
+
+      ;show opinion-metric-step
 
       ifelse opinion = "a" [
         ask agent [
@@ -1561,20 +1638,7 @@ initial-opinion-metric-value
 NIL
 HORIZONTAL
 
-SLIDER
-12
-442
-187
-475
-opinion-metric-step
-opinion-metric-step
-0
-1
-0.1
-0.01
-1
-NIL
-HORIZONTAL
+
 
 BUTTON
 745
@@ -1648,6 +1712,17 @@ SWITCH
 170
 is-leaving-active
 is-leaving-active
+1
+1
+-1000
+
+SWITCH
+873
+85
+1059
+118
+is-confirmation-bias-active
+is-confirmation-bias-active
 1
 1
 -1000
