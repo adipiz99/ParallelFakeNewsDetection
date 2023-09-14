@@ -138,9 +138,9 @@ class DeepQLearning:
                 observation = new_observation
                 total_training_rewards += reward
 
-                env.rewire()
-                env.grow()
-                env.leave()
+                #env.rewire()
+                #env.grow()
+                #env.leave()
 
                 #agents_with_counters = env.calculate_repetition_bias(agents_with_counters)
 
