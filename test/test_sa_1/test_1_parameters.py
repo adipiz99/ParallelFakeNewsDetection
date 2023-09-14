@@ -8,14 +8,14 @@ class test_sa_1:
     echo_chamber_fraction = 0.20
     opinion_metric_step = 0.10
     nb_nodes = 100
-    path = "test/test_sa_1/test_sa_1_2_results_confbias_nodynamic/"
+    path = "test/test_sa_1/test_sa_1_3_results_confbias_nodynamic/"
     warning = "global"
     node_range_static_b = 0.05
     node_range = 0.10
     choose_method = "degree"
     warning_impact = 0.10
     warning_impact_neutral = 0.30
-    sa_delay = 4
+    sa_delay = 2
 
     def set_dynamic_network_polarization(self, n_proc):
         self.network_polarization = np.linspace(0, 1, num=n_proc)

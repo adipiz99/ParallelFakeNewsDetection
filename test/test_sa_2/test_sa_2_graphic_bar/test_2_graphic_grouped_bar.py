@@ -16,7 +16,7 @@ for p in pathlist1:
     df_array1.append(pd.read_csv(str(p)))
 df_0 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_2/test_sa_2_1_results_confbias/"
+path = "test/test_sa_2/test_sa_2_1_results_confbias2/"
 pathlist2 = Path(path).glob('**/*.csv')
 pathlist2 = sorted(pathlist2)
 df_array2 = []
@@ -87,7 +87,7 @@ fig.set_figheight(7)
 fig.set_figwidth(14)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_2/test_sa_2_graphic_bar/test_sa_confbias_po_difference.png')  
+filepath = Path('test/test_sa_2/test_sa_2_graphic_bar/test_sa_confbias_po_difference2.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

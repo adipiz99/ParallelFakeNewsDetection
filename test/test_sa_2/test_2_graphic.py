@@ -8,7 +8,7 @@ tresholds = [0.270, 0.342, 0.414]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_2/test_sa_2_1_results_confbias/"
+path = "test/test_sa_2/test_sa_2_1_results_confbias2/"
 
 #get number of files in path
 pathlist = Path(path).glob('**/*.csv')
