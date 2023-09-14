@@ -2,13 +2,14 @@ import matplotlib.pyplot as plt
 from pathlib import Path 
 import pandas as pd
 
-colorarray=['purple','magenta','pink','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
+#colorarray=['purple','magenta','pink','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
+colorarray=['green','limegreen','yellowgreen','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
 
 static_b_values = [0.05, 0.10, 0.20]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_3/test_sa_3_1_results_confbias/"
+path = "test/test_sa_3/test_sa_3_1_results_confbias_nodynamic/"
 #get number of files in path
 pathlist = Path(path).glob('**/*.csv')
 pathlist = sorted(pathlist)

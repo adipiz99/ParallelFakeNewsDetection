@@ -36,17 +36,17 @@ netlogoCommands.set_node_range_static_b(test_sa_4.node_range_static_b)
 netlogoCommands.set_treshold(test_sa_4.treshold)
 
 # Setup dynamic network params
-rewiring = env.netlogo.get_rewire()
-if (not rewiring):
-    env.netlogo.toggle_rewire()
+#rewiring = env.netlogo.get_rewire()
+#if (not rewiring):
+#    env.netlogo.toggle_rewire()
 
-growing = env.netlogo.get_growth()
-if (not growing):
-    env.netlogo.toggle_growth()
+#growing = env.netlogo.get_growth()
+#if (not growing):
+#    env.netlogo.toggle_growth()
 
-leaving = env.netlogo.get_leaving()
-if (not leaving):
-    env.netlogo.toggle_leaving()
+#leaving = env.netlogo.get_leaving()
+#if (not leaving):
+#    env.netlogo.toggle_leaving()
 
 # Activate confirmation bias inside the network
 confirmationbias = env.netlogo.get_confirmation_bias()

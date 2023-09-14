@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.lines import Line2D
 
-colorarray=['black','purple','magenta','pink','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
+colorarray=['black','green','limegreen','yellowgreen','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
 
 tresholds = [0.270, 0.342, 0.414]
 
@@ -15,7 +15,7 @@ df3 = pd.read_csv(path + 'test_1_3.csv')
 df4 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_1_results_confbias"
+path = "test/test_sa_1/test_sa_1_1_results_confbias_nodynamic/"
 pathlist1 = Path(path).glob('**/*.csv')
 pathlist1 = sorted(pathlist1)
 df_array1 = []
@@ -23,7 +23,7 @@ for p in pathlist1:
     df_array1.append(pd.read_csv(str(p)))
 df_5 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_2_results_confbias/"
+path = "test/test_sa_1/test_sa_1_2_results_confbias_nodynamic/"
 pathlist2 = Path(path).glob('**/*.csv')
 pathlist2 = sorted(pathlist2)
 df_array2 = []
@@ -31,7 +31,7 @@ for p in pathlist2:
     df_array2.append(pd.read_csv(str(p)))
 df_4 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_1/test_sa_1_3_results_confbias/"
+path = "test/test_sa_1/test_sa_1_3_results_confbias_nodynamic/"
 pathlist3 = Path(path).glob('**/*.csv')
 pathlist3 = sorted(pathlist3)
 df_array3 = []
@@ -72,9 +72,9 @@ fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
 
 rects1 = ax.bar(r1, scores_no_sa, width, label='No Sa, No Bias', color='black', hatch='//')
-rects2 = ax.bar(r2, scores_sa_5, width, label='sa delay 5', color='purple', hatch='x', zorder=0)
-rects3 = ax.bar(r3, scores_sa_4, width, label='sa delay 4', color='magenta', hatch='xx')
-rects4 = ax.bar(r4, scores_sa_2, width, label = "sa delay 2", color="pink", hatch='/'),
+rects2 = ax.bar(r2, scores_sa_5, width, label='sa delay 5', color='green', hatch='x', zorder=0)
+rects3 = ax.bar(r3, scores_sa_4, width, label='sa delay 4', color='limegreen', hatch='xx')
+rects4 = ax.bar(r4, scores_sa_2, width, label = "sa delay 2", color="yellowgreen", hatch='/'),
 
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--')
@@ -99,7 +99,7 @@ fig.set_figwidth(12)
 
 fig.tight_layout()
 
-filepath = Path('test/test_sa_1/test_sa_1_graphic_bar/test_sa_confbias_step_difference.png')  
+filepath = Path('test/test_sa_1/test_sa_1_graphic_bar/test_sa_confbias_static_step_difference.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

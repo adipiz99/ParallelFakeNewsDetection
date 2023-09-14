@@ -2,13 +2,13 @@ import matplotlib.pyplot as plt
 from pathlib import Path 
 import pandas as pd
 
-colorarray=['purple','magenta','pink','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
+colorarray=['green','limegreen','yellowgreen','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
 
 tresholds = [0.270, 0.342, 0.414]
 
 markers = ['o-', 's--', 'D:', "^-", "v--", "o--", "s-", "D--", "^:", "v-", "o--", "s:"]
 
-path = "test/test_sa_1/test_sa_1_2_results_confbias/"
+path = "test/test_sa_1/test_sa_1_3_results_confbias_nodynamic/"
 
 #get number of files in path
 pathlist = Path(path).glob('**/*.csv')
@@ -50,7 +50,7 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title="\u03B8 (threshold)")
 plt.grid(visible=True,linewidth=0.2)
 
-filepath = Path(str(path) + "test_sa_1_4step.png")
+filepath = Path(str(path) + "test_sa_1_3_2step.png")
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 

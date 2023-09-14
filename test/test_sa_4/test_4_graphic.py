@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 colorarray=['purple','magenta','pink','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
+#colorarray=['green','limegreen','yellowgreen','darkgrey','lightgrey','darkslategrey','lightslategrey','slategrey', 'silver', 'gainsboro', 'dimgrey', 'grey', 'darkgrey']
 
 node_range = [0.10, 0.20, 0.30]
 

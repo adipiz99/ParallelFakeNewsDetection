@@ -8,7 +8,7 @@ class test_sa_3:
     echo_chamber_fraction = 0.20
     opinion_metric_step = 0.10
     nb_nodes = 100
-    path = "test/test_sa_3/test_sa_3_1_results_confbias/"
+    path = "test/test_sa_3/test_sa_3_1_results_confbias_nodynamic/"
     warning = "global"
     node_range_static_b = [0.05, 0.10, 0.20]
     node_span = 10
