@@ -17,54 +17,29 @@ df4 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
 
-path = "test/test_sa_3/test_sa_3_1_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-df4 = pd.read_csv(path + 'test_4.csv')
-df5 = pd.read_csv(path + 'test_5.csv')
-df6 = pd.read_csv(path + 'test_6.csv')
-df7 = pd.read_csv(path + 'test_7.csv')
-df8 = pd.read_csv(path + 'test_8.csv')
-df9 = pd.read_csv(path + 'test_9.csv')
-df10 = pd.read_csv(path + 'test_10.csv')
-df11 = pd.read_csv(path + 'test_11.csv')
-df12 = pd.read_csv(path + 'test_12.csv')
-df13 = pd.read_csv(path + 'test_13.csv')
-df_5 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
+path = "test/test_sa_3/test_sa_3_1_results_dynamic/"
+pathlist1 = Path(path).glob('**/*.csv')
+pathlist1 = sorted(pathlist1)
+df_array1 = []
+for p in pathlist1:
+    df_array1.append(pd.read_csv(str(p)))
+df_5 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_3/test_sa_3_2_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-df4 = pd.read_csv(path + 'test_4.csv')
-df5 = pd.read_csv(path + 'test_5.csv')
-df6 = pd.read_csv(path + 'test_6.csv')
-df7 = pd.read_csv(path + 'test_7.csv')
-df8 = pd.read_csv(path + 'test_8.csv')
-df9 = pd.read_csv(path + 'test_9.csv')
-df10 = pd.read_csv(path + 'test_10.csv')
-df11 = pd.read_csv(path + 'test_11.csv')
-df12 = pd.read_csv(path + 'test_12.csv')
-df13 = pd.read_csv(path + 'test_13.csv')
-df_10 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
+path = "test/test_sa_3/test_sa_3_2_results_dynamic/"
+pathlist2 = Path(path).glob('**/*.csv')
+pathlist2 = sorted(pathlist2)
+df_array2 = []
+for p in pathlist2:
+    df_array2.append(pd.read_csv(str(p)))
+df_10 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_3/test_sa_3_3_results/"
-df1 = pd.read_csv(path + 'test_1.csv')
-df2 = pd.read_csv(path + 'test_2.csv')
-df3 = pd.read_csv(path + 'test_3.csv')
-df4 = pd.read_csv(path + 'test_4.csv')
-df5 = pd.read_csv(path + 'test_5.csv')
-df6 = pd.read_csv(path + 'test_6.csv')
-df7 = pd.read_csv(path + 'test_7.csv')
-df8 = pd.read_csv(path + 'test_8.csv')
-df9 = pd.read_csv(path + 'test_9.csv')
-df10 = pd.read_csv(path + 'test_10.csv')
-df11 = pd.read_csv(path + 'test_11.csv')
-df12 = pd.read_csv(path + 'test_12.csv')
-df13 = pd.read_csv(path + 'test_13.csv')
-df_20 = pd.concat([df1, df2, df3, df4, df5, df6, df7, df9, df10, df11, df12, df13], ignore_index=True)
-
+path = "test/test_sa_3/test_sa_3_3_results_dynamic"
+pathlist3 = Path(path).glob('**/*.csv')
+pathlist3 = sorted(pathlist3)
+df_array3 = []
+for p in pathlist3:
+    df_array3.append(pd.read_csv(str(p)))
+df_20 = pd.concat(df_array3, ignore_index=True)
 
 scores_no_sa = []
 scores_sa_5 = []
@@ -87,9 +62,8 @@ for i in range(len(tresholds)):
             scores_sa_5.append(y)
         elif (j == 2):
             scores_sa_10.append(y)
-        elif (j == 3):
+        else:
             scores_sa_20.append(y)
-
 
 x = np.arange(len(tresholds))  # the label locations
 width = 0.2  # the width of the bars
@@ -102,10 +76,11 @@ r4 = [x + width+0.03 for x in r3]
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
 
-rects1 = ax.bar(r1, scores_no_sa, width, label='No sa', color='black', hatch='//')
-rects2 = ax.bar(r2, scores_sa_5, width, label='sa nrsb = 0.5', color='dimgrey', hatch='x', zorder=0)
-rects3 = ax.bar(r3, scores_sa_10, width, label='sa nrsb = 0.10', color='grey', hatch='xx')
-rects4 = ax.bar(r4, scores_sa_20, width, label = "sa nrsb = 0.20", color="darkgrey", hatch='/'), 
+rects1 = ax.bar(r1, scores_no_sa, width, label='No sa, no dynamic', color='black', hatch='//')
+rects2 = ax.bar(r2, scores_sa_5, width, label='sa nrsb = 0.5', color='darkblue', hatch='x', zorder=0)
+rects3 = ax.bar(r3, scores_sa_10, width, label='sa nrsb = 0.10', color='mediumblue', hatch='xx')
+rects4 = ax.bar(r4, scores_sa_20, width, label = "sa nrsb = 0.20", color="royalblue", hatch='/'), 
+
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--')
 plt.ylim([0,0.9])
@@ -121,14 +96,13 @@ ax.set_xlabel("\u03B8 (threshold)", fontsize = 15)
 colors = ['black']
 lines = [Line2D([0], [0], color=c, linewidth=1, linestyle='--') for c in colors]
 labels = ['Single-view']
-ax.legend([rects1,rects2,rects3,rects4,linea],('No sa','sa NRSB = 0.05', 'sa NRSB = 0.10', 'sa NRSB = 0.20','Virality 0.5'))
-
+ax.legend([rects1,rects2,rects3,rects4,linea],('No sa, no dynamic','sa NRSB = 0.05', 'sa NRSB = 0.10', 'sa NRSB = 0.20','Virality 0.5'))
 
 fig.set_figheight(6)
 fig.set_figwidth(12)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_3/test_sa_3_graphic_bar/test_sa_nrsb_difference.png')  
+filepath = Path('test/test_sa_3/test_sa_3_graphic_bar/test_sa_dynamic_nrsb_difference.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 
