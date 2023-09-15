@@ -17,7 +17,7 @@ df4 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
 
-path = "test/test_sa_4/test_sa_4_1_results_confbias/"
+path = "test/test_sa_4/test_sa_4_1_results_confbias_nodynamic/"
 pathlist1 = Path(path).glob('**/*.csv')
 pathlist1 = sorted(pathlist1)
 df_array1 = []
@@ -25,7 +25,7 @@ for p in pathlist1:
     df_array1.append(pd.read_csv(str(p)))
 df_10 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_4/test_sa_4_2_results_confbias/"
+path = "test/test_sa_4/test_sa_4_2_results_confbias_nodynamic/"
 pathlist2 = Path(path).glob('**/*.csv')
 pathlist2 = sorted(pathlist2)
 df_array2 = []
@@ -33,7 +33,7 @@ for p in pathlist2:
     df_array2.append(pd.read_csv(str(p)))
 df_20 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_4/test_sa_4_3_results_confbias/"
+path = "test/test_sa_4/test_sa_4_3_results_confbias_nodynamic/"
 pathlist3 = Path(path).glob('**/*.csv')
 pathlist3 = sorted(pathlist3)
 df_array3 = []
@@ -65,6 +65,10 @@ for i in range(len(tresholds)):
         else:
             scores_sa_30.append(y)
 
+print(scores_sa_10)
+print(scores_sa_20)
+print(scores_sa_30)
+
 matrix = np.array([scores_sa_10,scores_sa_20,scores_sa_30])
 matrix = np.transpose(matrix)
 scores_sa_10 = matrix[0]
@@ -83,9 +87,9 @@ fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
 
 rects1 = ax.bar(r1, scores_no_sa, width, label='No sa, no bias', color='black', hatch='//')
-rects2 = ax.bar(r2, scores_sa_10, width, label='sa NR = 0.10', color='purple', hatch='x', zorder=0)
-rects3 = ax.bar(r3, scores_sa_20, width, label='sa NR = 0.20', color='magenta', hatch='xx')
-rects4 = ax.bar(r4, scores_sa_30, width, label = "sa NR = 0.30", color="pink", hatch='/')
+rects2 = ax.bar(r2, scores_sa_10, width, label='sa NR = 0.10', color='green', hatch='x', zorder=0)
+rects3 = ax.bar(r3, scores_sa_20, width, label='sa NR = 0.20', color='limegreen', hatch='xx')
+rects4 = ax.bar(r4, scores_sa_30, width, label = "sa NR = 0.30", color="yellowgreen", hatch='/')
 
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--')
@@ -108,7 +112,7 @@ fig.set_figheight(6)
 fig.set_figwidth(12)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_4/test_sa_4_graphic_bar/test_sa_bias_nr_difference.png')  
+filepath = Path('test/test_sa_4/test_sa_4_graphic_bar/test_sa_bias_static_nr_difference.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 
