@@ -102,7 +102,7 @@ fig.set_figheight(6)
 fig.set_figwidth(12)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_3/test_sa_3_graphic_bar/test_sa_confbias_nrsb_difference.png')  
+filepath = Path('test/test_sa_3/test_sa_3_graphic_bar/test_sa_confbias_static_nrsb_difference.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 
