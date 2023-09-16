@@ -60,10 +60,9 @@ for i in range(len(tresholds)):
         else:
             scores_sa_30.append(y)
 
-print(scores_no_sa)
-print(scores_sa_10)
-print(scores_sa_20)
-print(scores_sa_30)
+values5 = np.concatenate([scores_sa_10, scores_sa_20, scores_sa_30])
+mediatotale = np.mean(values5)
+print("{:.2f}".format(mediatotale))
 
 x = np.arange(len(tresholds))  # the label locations
 width = 0.2  # the width of the bars
@@ -102,8 +101,8 @@ fig.set_figheight(6)
 fig.set_figwidth(12)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_5/test_sa_5_graphic_bar/test_sa_bias_wi_win_difference.png')  
-filepath.parent.mkdir(parents=True, exist_ok=True)  
-fig.savefig(filepath)
+# filepath = Path('test/test_sa_5/test_sa_5_graphic_bar/test_sa_bias_wi_win_difference.png')  
+# filepath.parent.mkdir(parents=True, exist_ok=True)  
+# fig.savefig(filepath)
 
 plt.show()

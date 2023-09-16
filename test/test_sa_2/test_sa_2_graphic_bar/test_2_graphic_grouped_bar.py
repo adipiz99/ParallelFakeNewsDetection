@@ -8,7 +8,7 @@ colorarray=['black','dimgrey','grey','darkgrey','lightgrey','darkslategrey','lig
 
 tresholds = [0.270, 0.342, 0.414]
 
-path = "test/test_sa_1/test_sa_1_3_results_confbias_nodynamic/"
+path = "test/test_sa_1/test_sa_1_3_results_static/"
 pathlist1 = Path(path).glob('**/*.csv')
 pathlist1 = sorted(pathlist1)
 df_array1 = []
@@ -16,7 +16,7 @@ for p in pathlist1:
     df_array1.append(pd.read_csv(str(p)))
 df_0 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_2/test_sa_2_1_results_confbias_nodynamic/"
+path = "test/test_sa_2/test_sa_2_1_results_static/"
 pathlist2 = Path(path).glob('**/*.csv')
 pathlist2 = sorted(pathlist2)
 df_array2 = []
@@ -24,7 +24,7 @@ for p in pathlist2:
     df_array2.append(pd.read_csv(str(p)))
 df_15 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_2/test_sa_2_2_results_confbias_nodynamic/"
+path = "test/test_sa_2/test_sa_2_2_results_static/"
 pathlist3 = Path(path).glob('**/*.csv')
 pathlist3 = sorted(pathlist3)
 df_array3 = []
@@ -51,9 +51,9 @@ for i in range(len(tresholds)):
         else:
             scores_sa_27.append(y)
 
-print(scores_sa_0)
-print(scores_sa_15)
-print(scores_sa_27)
+values2 = np.concatenate([scores_sa_0, scores_sa_15, scores_sa_27])
+mediatotale = np.mean(values2)
+print("{:.2f}".format(mediatotale))
 
 x = np.arange(len(tresholds))  # the label locations
 width = 0.2  # the width of the bars
@@ -91,8 +91,8 @@ fig.set_figheight(7)
 fig.set_figwidth(14)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_2/test_sa_2_graphic_bar/test_sa_confbias_static_po_difference.png')  
-filepath.parent.mkdir(parents=True, exist_ok=True)  
-fig.savefig(filepath)
+# filepath = Path('test/test_sa_2/test_sa_2_graphic_bar/test_sa_confbias_static_po_difference.png')  
+# filepath.parent.mkdir(parents=True, exist_ok=True)  
+# fig.savefig(filepath)
 
 plt.show()

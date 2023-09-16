@@ -17,7 +17,7 @@ df4 = pd.read_csv(path + 'test_1_4.csv')
 df_no_sa = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
 
-path = "test/test_sa_3/test_sa_3_1_results_confbias_nodynamic/"
+path = "test/test_sa_3/test_sa_3_1_results_static/"
 pathlist1 = Path(path).glob('**/*.csv')
 pathlist1 = sorted(pathlist1)
 df_array1 = []
@@ -25,7 +25,7 @@ for p in pathlist1:
     df_array1.append(pd.read_csv(str(p)))
 df_5 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_3/test_sa_3_2_results_confbias_nodynamic/"
+path = "test/test_sa_3/test_sa_3_2_results_static/"
 pathlist2 = Path(path).glob('**/*.csv')
 pathlist2 = sorted(pathlist2)
 df_array2 = []
@@ -33,7 +33,7 @@ for p in pathlist2:
     df_array2.append(pd.read_csv(str(p)))
 df_10 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_3/test_sa_3_3_results_confbias_nodynamic/"
+path = "test/test_sa_3/test_sa_3_3_results_static/"
 pathlist3 = Path(path).glob('**/*.csv')
 pathlist3 = sorted(pathlist3)
 df_array3 = []
@@ -66,7 +66,6 @@ for i in range(len(tresholds)):
             scores_sa_20.append(y)
 
 values3 = np.concatenate([scores_sa_5, scores_sa_10, scores_sa_20])
-print(values3)
 mediatotale = np.mean(values3)
 print("{:.2f}".format(mediatotale))
 
@@ -107,8 +106,8 @@ fig.set_figheight(6)
 fig.set_figwidth(12)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_3/test_sa_3_graphic_bar/test_sa_confbias_static_nrsb_difference.png')  
-filepath.parent.mkdir(parents=True, exist_ok=True)  
-fig.savefig(filepath)
+# filepath = Path('test/test_sa_3/test_sa_3_graphic_bar/test_sa_confbias_static_nrsb_difference.png')  
+# filepath.parent.mkdir(parents=True, exist_ok=True)  
+# fig.savefig(filepath)
 
 plt.show()
