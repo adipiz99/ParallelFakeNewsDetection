@@ -3,12 +3,12 @@ import numpy as np
 class test_sa_3:
     network_polarization = np.linspace(0, 1, num=13)
     opinion_polarization = 0.0
-    treshold = 0.342
+    treshold = 0.414
     number_of_iterations = 100
     echo_chamber_fraction = 0.20
     opinion_metric_step = 0.10
     nb_nodes = 100
-    path = "test/test_sa_3/test_sa_3_2_results_confbias_nodynamic/"
+    path = "test/test_sa_3/test_sa_3_3_results_confbias_nodynamic/"
     warning = "global"
     node_range_static_b = [0.05, 0.10, 0.20]
     node_span = 10
