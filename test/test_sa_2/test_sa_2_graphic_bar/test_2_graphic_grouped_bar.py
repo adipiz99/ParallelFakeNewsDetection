@@ -8,7 +8,7 @@ colorarray=['black','dimgrey','grey','darkgrey','lightgrey','darkslategrey','lig
 
 tresholds = [0.270, 0.342, 0.414]
 
-path = "test/test_sa_1/test_sa_1_3_results_confbias/"
+path = "test/test_sa_1/test_sa_1_3_results_confbias_nodynamic/"
 pathlist1 = Path(path).glob('**/*.csv')
 pathlist1 = sorted(pathlist1)
 df_array1 = []
@@ -16,7 +16,7 @@ for p in pathlist1:
     df_array1.append(pd.read_csv(str(p)))
 df_0 = pd.concat(df_array1, ignore_index=True)
 
-path = "test/test_sa_2/test_sa_2_1_results_confbias2/"
+path = "test/test_sa_2/test_sa_2_1_results_confbias_nodynamic/"
 pathlist2 = Path(path).glob('**/*.csv')
 pathlist2 = sorted(pathlist2)
 df_array2 = []
@@ -24,7 +24,7 @@ for p in pathlist2:
     df_array2.append(pd.read_csv(str(p)))
 df_15 = pd.concat(df_array2, ignore_index=True)
 
-path = "test/test_sa_2/test_sa_2_2_results_confbias/"
+path = "test/test_sa_2/test_sa_2_2_results_confbias_nodynamic/"
 pathlist3 = Path(path).glob('**/*.csv')
 pathlist3 = sorted(pathlist3)
 df_array3 = []
@@ -51,6 +51,10 @@ for i in range(len(tresholds)):
         else:
             scores_sa_27.append(y)
 
+print(scores_sa_0)
+print(scores_sa_15)
+print(scores_sa_27)
+
 x = np.arange(len(tresholds))  # the label locations
 width = 0.2  # the width of the bars
 
@@ -61,9 +65,9 @@ r3 = [x + width+0.03 for x in r2]
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 10})
 
-rects1 = ax.bar(r1, scores_sa_0, width, label='sa PO = 0', color='purple', hatch='x', zorder=0)
-rects2 = ax.bar(r2, scores_sa_15, width, label = "sa PO = 0.15", color="magenta", hatch='/'), 
-rects3 = ax.bar(r3, scores_sa_27, width, label = "sa PO = 0.27", color='pink', hatch='+'), 
+rects1 = ax.bar(r1, scores_sa_0, width, label='sa PO = 0', color='green', hatch='x', zorder=0)
+rects2 = ax.bar(r2, scores_sa_15, width, label = "sa PO = 0.15", color="limegreen", hatch='/'), 
+rects3 = ax.bar(r3, scores_sa_27, width, label = "sa PO = 0.27", color='yellowgreen', hatch='+'), 
 
 threshold = 0.50
 linea=plt.axhline(y=threshold,linewidth=1, color='k',linestyle='--', label = "Virality 0.5")
@@ -87,7 +91,7 @@ fig.set_figheight(7)
 fig.set_figwidth(14)
 fig.tight_layout()
 
-filepath = Path('test/test_sa_2/test_sa_2_graphic_bar/test_sa_confbias_po_difference2.png')  
+filepath = Path('test/test_sa_2/test_sa_2_graphic_bar/test_sa_confbias_static_po_difference.png')  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 fig.savefig(filepath)
 
