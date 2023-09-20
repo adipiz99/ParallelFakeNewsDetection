@@ -1,9 +1,5 @@
 # Fake News Detection
 
-## TO-DO List
-- parallelizzare il for in deepq_simulation (righe 120-159)
-
-
 ## Il modello agent-based
 
 Qui viene presentata la descrizione completa del modello che simula la
